@@ -1,0 +1,147 @@
+@import "tailwindcss";
+@import "/vendor/filament/filament/resources/css/app.css";
+
+@source "../../../app/Filament/**/*.php";
+@source "../../../vendor/filament/**/*.blade.php";
+@source "../../../resources/views/**/*.blade.php";
+
+/* ─── Sidebar ──────────────────────────────────────────── */
+.fi-sidebar {
+    background-color: #0f172a !important;
+    border-right: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.fi-sidebar-nav {
+    padding: 0.75rem 0.75rem !important;
+}
+
+/* Brand / logo area */
+.fi-sidebar-header {
+    background-color: #0f172a !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+    padding: 1rem 1.25rem !important;
+}
+
+/* Nav group labels */
+.fi-sidebar-group-label {
+    color: rgba(148, 163, 184, 0.6) !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    padding-left: 0.75rem !important;
+}
+
+/* Nav items */
+.fi-sidebar-item-button {
+    border-radius: 0.5rem !important;
+    color: rgb(148, 163, 184) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    transition: background-color 0.15s, color 0.15s !important;
+}
+
+.fi-sidebar-item-button:hover {
+    background-color: rgba(255,255,255,0.07) !important;
+    color: #fff !important;
+}
+
+.fi-sidebar-item-button.fi-active,
+.fi-sidebar-item-button[aria-current] {
+    background-color: rgba(59,130,246,0.2) !important;
+    color: #93c5fd !important;
+}
+
+/* Nav item icons */
+.fi-sidebar-item-icon {
+    color: inherit !important;
+}
+
+/* ─── Topbar ───────────────────────────────────────────── */
+.fi-topbar {
+    background-color: #fff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+/* ─── Main content ─────────────────────────────────────── */
+.fi-main {
+    background-color: #f8fafc !important;
+}
+
+.fi-main-ctn {
+    padding: 1.5rem !important;
+}
+
+/* ─── Page header ──────────────────────────────────────── */
+.fi-header-heading {
+    font-size: 1.375rem !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    letter-spacing: -0.015em !important;
+}
+
+/* ─── Cards / Sections ─────────────────────────────────── */
+.fi-section,
+.fi-card {
+    border-radius: 0.875rem !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06) !important;
+}
+
+/* ─── Tables ───────────────────────────────────────────── */
+.fi-ta-ctn {
+    border-radius: 0.875rem !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+.fi-ta-header-ctn {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.fi-ta-row:hover td {
+    background-color: #f1f5f9 !important;
+}
+
+/* ─── Buttons ──────────────────────────────────────────── */
+.fi-btn-color-primary {
+    border-radius: 0.5rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+}
+
+/* ─── Badges / Pills ───────────────────────────────────── */
+.fi-badge {
+    border-radius: 999px !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.02em !important;
+}
+
+/* ─── Forms ────────────────────────────────────────────── */
+.fi-input {
+    border-radius: 0.5rem !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+}
+
+.fi-input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12) !important;
+}
+
+/* ─── Stat widgets ─────────────────────────────────────── */
+.fi-wi-stats-overview-stat {
+    border-radius: 0.875rem !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+.fi-wi-stats-overview-stat-value {
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+}
