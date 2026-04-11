@@ -7,11 +7,46 @@
                 <p class="text-sm text-ink-500 dark:text-sage-500 mt-1">Selamat datang, {{ $page.props.auth.user.name }}</p>
             </div>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div v-for="stat in stats_list" :key="stat.label" class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 p-5 shadow-sm">
-                    <p class="text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-widest">{{ stat.label }}</p>
-                    <p class="text-3xl font-bold mt-1" :class="stat.accent ? 'text-ink-900 dark:text-sage-300' : 'text-ink-900 dark:text-sage-200'">{{ stat.value }}</p>
+            <!-- Stats: developer = 2 baris (2 + 4), PM/admin = 4 sejajar -->
+            <template v-if="is_developer">
+                <div class="grid grid-cols-2 gap-4">
+                    <div v-for="stat in stats_list.slice(0, 2)" :key="stat.label"
+                        class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 p-5 shadow-sm">
+                        <p class="text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-widest">{{ stat.label }}</p>
+                        <p class="text-3xl font-bold mt-1 text-ink-900 dark:text-sage-200">{{ stat.value }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div v-for="stat in stats_list.slice(2)" :key="stat.label"
+                        class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 p-5 shadow-sm">
+                        <p class="text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-widest">{{ stat.label }}</p>
+                        <p class="text-3xl font-bold mt-1" :class="stat.color ?? 'text-ink-900 dark:text-sage-200'">{{ stat.value }}</p>
+                    </div>
+                </div>
+            </template>
+            <template v-else>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div v-for="stat in stats_list" :key="stat.label"
+                        class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 p-5 shadow-sm">
+                        <p class="text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-widest">{{ stat.label }}</p>
+                        <p class="text-3xl font-bold mt-1 text-ink-900 dark:text-sage-200">{{ stat.value }}</p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 p-5 shadow-sm">
+                    <h2 class="font-semibold text-ink-900 dark:text-sage-200 mb-4">Task by Status</h2>
+                    <div class="flex items-center justify-center" style="height: 220px">
+                        <canvas ref="statusChartRef"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 p-5 shadow-sm">
+                    <h2 class="font-semibold text-ink-900 dark:text-sage-200 mb-4">Task by Priority</h2>
+                    <div style="height: 220px">
+                        <canvas ref="priorityChartRef"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -81,16 +116,92 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Link, usePage } from '@inertiajs/vue3'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { Chart, DoughnutController, BarController, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js'
 
-const props = defineProps({ stats: Object, recentProjects: Array, myTasks: Array })
+Chart.register(DoughnutController, BarController, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend)
+
+const props = defineProps({ stats: Object, is_developer: Boolean, recentProjects: Array, myTasks: Array, tasksByStatus: Object, tasksByPriority: Object })
+
+const statusChartRef  = ref(null)
+const priorityChartRef = ref(null)
+
+onMounted(() => {
+    const isDark = document.documentElement.classList.contains('dark')
+    const textColor = isDark ? '#94a3b8' : '#64748b'
+    const gridColor = isDark ? 'rgba(148,163,184,0.1)' : 'rgba(0,0,0,0.06)'
+
+    // Donut - Task by Status
+    const statusData = {
+        todo:        props.tasksByStatus?.todo        ?? 0,
+        in_progress: props.tasksByStatus?.in_progress ?? 0,
+        review:      props.tasksByStatus?.review      ?? 0,
+        done:        props.tasksByStatus?.done        ?? 0,
+    }
+    new Chart(statusChartRef.value, {
+        type: 'doughnut',
+        data: {
+            labels: ['Todo', 'In Progress', 'Review', 'Done'],
+            datasets: [{
+                data: Object.values(statusData),
+                backgroundColor: ['#94a3b8', '#6ee7b7', '#c4b5fd', '#34d399'],
+                borderWidth: 0,
+                hoverOffset: 6,
+            }],
+        },
+        options: {
+            cutout: '70%',
+            plugins: {
+                legend: { position: 'bottom', labels: { color: textColor, padding: 16, font: { size: 12 } } },
+                tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} task` } },
+            },
+        },
+    })
+
+    // Bar - Task by Priority
+    const priorityData = {
+        low:    props.tasksByPriority?.low    ?? 0,
+        medium: props.tasksByPriority?.medium ?? 0,
+        high:   props.tasksByPriority?.high   ?? 0,
+    }
+    new Chart(priorityChartRef.value, {
+        type: 'bar',
+        data: {
+            labels: ['Low', 'Medium', 'High'],
+            datasets: [{
+                label: 'Jumlah Task',
+                data: Object.values(priorityData),
+                backgroundColor: ['#6ee7b7', '#fcd34d', '#f87171'],
+                borderRadius: 8,
+                borderSkipped: false,
+            }],
+        },
+        options: {
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: ctx => ` ${ctx.raw} task` } },
+            },
+            scales: {
+                x: { grid: { display: false }, ticks: { color: textColor } },
+                y: { grid: { color: gridColor }, ticks: { color: textColor, precision: 0 }, beginAtZero: true },
+            },
+        },
+    })
+})
 const page = usePage()
 
-const stats_list = computed(() => [
+const stats_list = computed(() => props.is_developer ? [
+    { label: 'Projects Saya',  value: props.stats.my_projects },
+    { label: 'Total Task',     value: props.stats.my_tasks },
+    { label: 'Todo',           value: props.stats.todo,        color: 'text-ink-400 dark:text-ink-400' },
+    { label: 'In Progress',    value: props.stats.in_progress, color: 'text-sage-600 dark:text-sage-400' },
+    { label: 'Review',         value: props.stats.review,      color: 'text-violet-600 dark:text-violet-400' },
+    { label: 'Done',           value: props.stats.done,        color: 'text-emerald-600 dark:text-emerald-400' },
+] : [
     { label: 'Total Projects', value: props.stats.total_projects },
     { label: 'Total Tasks',    value: props.stats.total_tasks },
     { label: 'Total Users',    value: props.stats.total_users },
-    { label: 'Task Saya',      value: props.stats.my_tasks, accent: true },
+    { label: 'Task Saya',      value: props.stats.my_tasks },
 ])
 
 const statusLabel   = s => ({ planning:'Planning', in_progress:'In Progress', on_hold:'On Hold', completed:'Completed' }[s] ?? s)

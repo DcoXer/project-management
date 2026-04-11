@@ -12,6 +12,13 @@
                     <div class="flex items-center gap-2">
                         <span :class="priorityClass(project.priority)" class="text-xs px-3 py-1 rounded-full font-medium">{{ project.priority }}</span>
                         <span :class="statusClass(project.status)" class="text-xs px-3 py-1 rounded-full font-medium">{{ statusLabel(project.status) }}</span>
+                        <a :href="`/projects/${project.id}/export-pdf`" target="_blank"
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 hover:bg-ink-700 dark:hover:bg-sage-200 transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                            </svg>
+                            Export PDF
+                        </a>
                     </div>
                 </div>
             </div>
@@ -81,9 +88,11 @@
                         <div class="space-y-2.5">
                             <div v-for="member in project.members" :key="member.id" class="flex items-center gap-3">
                                 <div class="w-8 h-8 rounded-full bg-sage-200 dark:bg-sage-300/20 text-sage-700 dark:text-sage-300 text-sm font-semibold flex items-center justify-center shrink-0">{{ member.name.charAt(0).toUpperCase() }}</div>
-                                <div>
+                                <div class="min-w-0">
                                     <p class="text-sm font-medium text-ink-800 dark:text-sage-200">{{ member.name }}</p>
-                                    <p class="text-xs text-ink-400 dark:text-sage-500">{{ member.pivot?.role ?? '-' }}</p>
+                                    <p class="text-xs text-ink-400 dark:text-sage-500">
+                                        {{ member.pivot?.role === 'manager' ? 'Project Manager' : specializationLabel(member.pivot?.specialization) }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -106,5 +115,6 @@ const statusClass     = s => ({ planning:'bg-ink-100 text-ink-600 dark:bg-ink-70
 const taskStatusLabel = s => ({ todo:'Todo', in_progress:'In Progress', review:'Review', done:'Done' }[s] ?? s)
 const taskStatusClass = s => ({ todo:'bg-ink-100 text-ink-600 dark:bg-ink-700/50 dark:text-ink-300', in_progress:'bg-sage-100 text-sage-700 dark:bg-sage-300/15 dark:text-sage-300', review:'bg-violet-100 text-violet-700 dark:bg-violet-300/15 dark:text-violet-300', done:'bg-emerald-100 text-emerald-700 dark:bg-emerald-300/15 dark:text-emerald-300' }[s] ?? 'bg-ink-100 text-ink-500')
 const priorityClass   = p => ({ low:'bg-sage-100 text-sage-700 dark:bg-sage-300/15 dark:text-sage-300', medium:'bg-amber-100 text-amber-700 dark:bg-amber-300/15 dark:text-amber-300', high:'bg-red-100 text-red-700 dark:bg-red-300/15 dark:text-red-300' }[p] ?? 'bg-ink-100 text-ink-500')
-const formatDate      = d => d ? new Date(d).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) : '-'
+const formatDate         = d => d ? new Date(d).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) : '-'
+const specializationLabel = s => ({ frontend:'Frontend Developer', backend:'Backend Developer', ui_ux:'UI/UX Designer', qa:'QA Engineer', devops:'DevOps Engineer', mobile:'Mobile Developer', pentesting:'Pentesting Web/Mobile' }[s] ?? '-')
 </script>

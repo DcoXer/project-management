@@ -15,29 +15,57 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        $stats = [
-            'total_projects' => Project::count(),
-            'total_tasks' => Task::count(),
-            'total_users' => User::count(),
-            'my_tasks' => Task::where('assigned_to', $user->id)->count(),
-            'overdue_tasks' => Task::where('assigned_to', $user->id)
-                ->whereNot('status', 'done')
-                ->whereNotNull('due_date')
-                ->whereDate('due_date', '<', today())
-                ->count(),
-            'warning_tasks' => Task::where('assigned_to', $user->id)
-                ->whereNot('status', 'done')
-                ->whereNotNull('due_date')
-                ->whereDate('due_date', '>=', today())
-                ->whereDate('due_date', '<=', today()->addDays(3))
-                ->count(),
+        $myProjectIds = Project::where(fn ($q) => $q
+            ->where('created_by', $user->id)
+            ->orWhereHas('members', fn ($m) => $m->where('user_id', $user->id))
+        )->pluck('id');
+
+        $myTaskQuery = fn () => Task::where(fn ($q) => $q
+            ->where('assigned_to', $user->id)
+            ->orWhere('created_by', $user->id)
+            ->orWhereIn('project_id', $myProjectIds)
+        );
+
+        $isDeveloper = $user->role === 'developer';
+
+        $myAssignedTaskQuery = fn () => Task::where('assigned_to', $user->id);
+
+        // Hitung status task yang di-assign ke user
+        $statusCounts = $myAssignedTaskQuery()
+            ->selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        $stats = $isDeveloper ? [
+            'my_projects' => $myProjectIds->count(),
+            'my_tasks'    => $myAssignedTaskQuery()->count(),
+            'todo'        => $statusCounts['todo']        ?? 0,
+            'in_progress' => $statusCounts['in_progress'] ?? 0,
+            'review'      => $statusCounts['review']      ?? 0,
+            'done'        => $statusCounts['done']        ?? 0,
+        ] : [
+            'total_projects' => $myProjectIds->count(),
+            'total_tasks'    => $myTaskQuery()->count(),
+            'total_users'    => User::count(),
+            'my_tasks'       => $myAssignedTaskQuery()->count(),
         ];
+
+        $tasksByStatus = $myAssignedTaskQuery()
+            ->selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        $tasksByPriority = $myAssignedTaskQuery()
+            ->selectRaw('priority, count(*) as count')
+            ->groupBy('priority')
+            ->pluck('count', 'priority');
 
         $recentProjects = Project::with('creator')
             ->withCount([
                 'tasks',
                 'tasks as tasks_done_count' => fn ($q) => $q->where('status', 'done'),
             ])
+            ->whereIn('id', $myProjectIds)
             ->latest()
             ->take(5)
             ->get(['id', 'name', 'status', 'priority', 'end_date', 'created_by']);
@@ -50,9 +78,12 @@ class DashboardController extends Controller
             ->get(['id', 'title', 'status', 'priority', 'due_date', 'project_id']);
 
         return Inertia::render('Dashboard', [
-            'stats' => $stats,
+            'stats'          => $stats,
+            'is_developer'   => $isDeveloper,
             'recentProjects' => $recentProjects,
-            'myTasks' => $myTasks,
+            'myTasks'        => $myTasks,
+            'tasksByStatus'  => $tasksByStatus,
+            'tasksByPriority'=> $tasksByPriority,
         ]);
     }
 }

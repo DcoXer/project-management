@@ -14,7 +14,15 @@ class UpdateTaskStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', 'in:todo,in_progress,review,done'],
+            'status' => ['required', 'in:in_progress,review'],
+            'proof'  => ['nullable', 'string', 'max:2000', 'required_if:status,review'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'proof.required_if' => 'Bukti pekerjaan wajib dilampirkan saat submit ke Review.',
         ];
     }
 }

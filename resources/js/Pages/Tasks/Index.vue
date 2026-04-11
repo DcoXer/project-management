@@ -2,9 +2,18 @@
     <AppLayout>
         <div class="space-y-5">
 
-            <div>
-                <h1 class="text-2xl font-bold text-ink-900 dark:text-sage-200 tracking-tight">Tasks</h1>
-                <p class="text-sm text-ink-500 dark:text-sage-500 mt-1">Semua task yang tersedia</p>
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h1 class="text-2xl font-bold text-ink-900 dark:text-sage-200 tracking-tight">My Tasks</h1>
+                    <p class="text-sm text-ink-500 dark:text-sage-500 mt-1">Task yang di-assign ke kamu</p>
+                </div>
+                <Link href="/tasks/kanban"
+                    class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-ink-200 dark:border-ink-600 text-ink-600 dark:text-sage-400 hover:bg-ink-100 dark:hover:bg-ink-700 transition">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
+                    </svg>
+                    Kanban View
+                </Link>
             </div>
 
             <!-- Filters -->

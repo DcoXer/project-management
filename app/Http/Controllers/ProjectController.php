@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,12 +19,11 @@ class ProjectController extends Controller
             ->withCount([
                 'tasks',
                 'tasks as tasks_done_count' => fn ($q) => $q->where('status', 'done'),
-            ]);
-
-        // Zero trust: developer hanya lihat project yang dia ikuti
-        if (! in_array($user->role, ['admin', 'project_manager'])) {
-            $query->whereHas('members', fn ($q) => $q->where('user_id', $user->id));
-        }
+            ])
+            ->where(fn ($q) => $q
+                ->where('created_by', $user->id)
+                ->orWhereHas('members', fn ($m) => $m->where('user_id', $user->id))
+            );
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -48,10 +49,10 @@ class ProjectController extends Controller
     {
         $user = $request->user();
 
-        $isMember = $project->members()->where('user_id', $user->id)->exists();
+        $isMember  = $project->members()->where('user_id', $user->id)->exists();
         $isCreator = $project->created_by === $user->id;
 
-        if (! in_array($user->role, ['admin', 'project_manager']) && ! $isMember && ! $isCreator) {
+        if (! $isMember && ! $isCreator) {
             abort(403, 'Kamu bukan anggota project ini.');
         }
 
@@ -64,5 +65,32 @@ class ProjectController extends Controller
         return Inertia::render('Projects/Show', [
             'project' => $project,
         ]);
+    }
+
+    public function exportPdf(Request $request, Project $project): HttpResponse
+    {
+        $user = $request->user();
+
+        $isMember  = $project->members()->where('user_id', $user->id)->exists();
+        $isCreator = $project->created_by === $user->id;
+
+        if (! $isMember && ! $isCreator) {
+            abort(403);
+        }
+
+        $project->loadCount([
+            'tasks',
+            'tasks as tasks_done_count' => fn ($q) => $q->where('status', 'done'),
+        ]);
+        $project->load(['creator', 'members', 'tasks.assignee']);
+
+        $pdf = Pdf::loadView('pdf.project', [
+            'project'   => $project,
+            'generatedAt' => now()->format('d M Y, H:i'),
+        ])->setPaper('a4', 'portrait');
+
+        $filename = 'laporan-' . str($project->name)->slug() . '-' . now()->format('Ymd') . '.pdf';
+
+        return $pdf->download($filename);
     }
 }

@@ -4,7 +4,18 @@
       "Bash(php artisan:*)",
       "Bash(ls /c/laragon/www/project-management/*.md)",
       "Bash(xargs grep:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(php --version)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(php:*)",
+      "Bash(tasklist)",
+      "Bash(sc query:*)",
+      "Bash(netstat -ano)",
+      "Bash(tasklist:*)",
+      "Bash(cmd:*)",
+      "Bash(powershell:*)",
+      "Bash(composer require:*)"
     ]
   }
 }
