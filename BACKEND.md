@@ -87,20 +87,23 @@ props = {
     total_projects: 10,
     total_tasks: 48,
     total_users: 12,
-    my_tasks: 5
+    my_tasks: 5,
+    overdue_tasks: 2,      // task yang due date-nya sudah lewat & belum done
+    warning_tasks: 1       // task yang due date-nya H-3 atau kurang & belum done
   },
   recentProjects: [
     {
       id, name, status, priority, end_date, created_by,
       tasks_count: 8,
       tasks_done_count: 3,
-      progress: 38,       // % (0-100)
+      progress: 38,        // % (0-100)
       creator: { id, name }
     }
   ],
   myTasks: [
     {
       id, title, status, priority, due_date, project_id,
+      deadline_status: 'overdue' | 'warning' | 'upcoming' | null,
       project: { id, name }
     }
   ]
@@ -187,6 +190,7 @@ props = {
     data: [
       {
         id, title, status, priority, due_date,
+        deadline_status: 'overdue' | 'warning' | 'upcoming' | null,
         project: { id, name },
         assignee: { id, name }
       }
@@ -210,6 +214,7 @@ Render: `Tasks/Show`
 props = {
   task: {
     id, title, description, status, priority, due_date,
+    deadline_status: 'overdue' | 'warning' | 'upcoming' | null,
     project: { id, name },
     assignee: { id, name },
     creator: { id, name },

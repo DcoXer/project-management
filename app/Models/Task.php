@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Support\Carbon;
 
 #[Fillable(['project_id', 'title', 'description', 'status', 'priority', 'assigned_to', 'created_by', 'due_date'])]
 class Task extends Model
@@ -41,5 +43,24 @@ class Task extends Model
     public function activities()
     {
         return $this->morphMany(ActivityLog::class, 'subject')->latest();
+    }
+
+    protected function deadlineStatus(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (! $this->due_date || $this->status === 'done') {
+                    return null;
+                }
+
+                $daysLeft = (int) Carbon::today()->diffInDays($this->due_date, false);
+
+                return match (true) {
+                    $daysLeft < 0  => 'overdue',
+                    $daysLeft <= 3 => 'warning',
+                    default        => 'upcoming',
+                };
+            }
+        );
     }
 }

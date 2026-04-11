@@ -20,6 +20,17 @@ class DashboardController extends Controller
             'total_tasks' => Task::count(),
             'total_users' => User::count(),
             'my_tasks' => Task::where('assigned_to', $user->id)->count(),
+            'overdue_tasks' => Task::where('assigned_to', $user->id)
+                ->whereNot('status', 'done')
+                ->whereNotNull('due_date')
+                ->whereDate('due_date', '<', today())
+                ->count(),
+            'warning_tasks' => Task::where('assigned_to', $user->id)
+                ->whereNot('status', 'done')
+                ->whereNotNull('due_date')
+                ->whereDate('due_date', '>=', today())
+                ->whereDate('due_date', '<=', today()->addDays(3))
+                ->count(),
         ];
 
         $recentProjects = Project::with('creator')
