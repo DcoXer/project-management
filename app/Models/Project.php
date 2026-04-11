@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -34,5 +35,19 @@ class Project extends Model
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    protected function progress(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $total = $this->tasks_count ?? $this->tasks()->count();
+                if ($total === 0) {
+                    return 0;
+                }
+                $done = $this->tasks_done_count ?? $this->tasks()->where('status', 'done')->count();
+                return (int) round(($done / $total) * 100);
+            }
+        );
     }
 }

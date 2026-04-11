@@ -16,5 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response, \Throwable $e, \Illuminate\Http\Request $request) {
+            if ($response->getStatusCode() === 401 && $request->header('X-Inertia')) {
+                return redirect()->route('login');
+            }
+
+            return $response;
+        });
     })->create();

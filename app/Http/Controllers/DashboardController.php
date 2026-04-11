@@ -23,6 +23,10 @@ class DashboardController extends Controller
         ];
 
         $recentProjects = Project::with('creator')
+            ->withCount([
+                'tasks',
+                'tasks as tasks_done_count' => fn ($q) => $q->where('status', 'done'),
+            ])
             ->latest()
             ->take(5)
             ->get(['id', 'name', 'status', 'priority', 'end_date', 'created_by']);
