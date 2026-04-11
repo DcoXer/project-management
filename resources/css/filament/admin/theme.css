@@ -1,8 +1,7 @@
-@import "tailwindcss";
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
 
-@source "../../../app/Filament/**/*.php";
-@source "../../../vendor/filament/**/*.blade.php";
-@source "../../../resources/views/**/*.blade.php";
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
 
 /* ─── Sidebar ──────────────────────────────────────────── */
 .fi-sidebar {
