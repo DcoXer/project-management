@@ -14,20 +14,21 @@ class TasksTable
     {
         return $table
             ->columns([
-                TextColumn::make('project_id')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('project.name')
+                    ->label('Project')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('title')
                     ->searchable(),
                 TextColumn::make('status')
                     ->badge(),
                 TextColumn::make('priority')
                     ->badge(),
-                TextColumn::make('assigned_to')
-                    ->numeric()
+                TextColumn::make('assignee.name')
+                    ->label('Assigned To')
                     ->sortable(),
-                TextColumn::make('created_by')
-                    ->numeric()
+                TextColumn::make('creator.name')
+                    ->label('Created By')
                     ->sortable(),
                 TextColumn::make('due_date')
                     ->date()

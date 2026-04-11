@@ -26,8 +26,8 @@ class ProjectsTable
                 TextColumn::make('end_date')
                     ->date()
                     ->sortable(),
-                TextColumn::make('created_by')
-                    ->numeric()
+                TextColumn::make('creator.name')
+                    ->label('Created By')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
