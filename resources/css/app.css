@@ -1,11 +1,43 @@
 @import 'tailwindcss';
 
+/* Class-based dark mode: tambah class .dark ke <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../**/*.vue';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    /* Sage — base light mode color (#c2d8c4 = sage-300) */
+    --color-sage-50:  #f4f9f4;
+    --color-sage-100: #e6f2e7;
+    --color-sage-200: #d4e8d6;
+    --color-sage-300: #c2d8c4;
+    --color-sage-400: #a8c5ab;
+    --color-sage-500: #8aad8e;
+    --color-sage-600: #6d9472;
+    --color-sage-700: #527b57;
+    --color-sage-800: #3d5c41;
+    --color-sage-900: #2d4330;
+
+    /* Ink — base dark mode / secondary color (#222222 = ink-900) */
+    --color-ink-50:  #f7f7f7;
+    --color-ink-100: #efefef;
+    --color-ink-200: #dcdcdc;
+    --color-ink-300: #bdbdbd;
+    --color-ink-400: #989898;
+    --color-ink-500: #7a7a7a;
+    --color-ink-600: #5e5e5e;
+    --color-ink-700: #444444;
+    --color-ink-800: #333333;
+    --color-ink-850: #2a2a2a;
+    --color-ink-900: #222222;
+    --color-ink-950: #181818;
 }
+
+/* Google Font — Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
