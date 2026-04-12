@@ -14,15 +14,21 @@ class UpdateTaskStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', 'in:in_progress,review'],
-            'proof'  => ['nullable', 'string', 'max:2000', 'required_if:status,review'],
+            'status'     => ['required', 'in:in_progress,review'],
+            'proof'      => ['nullable', 'string', 'max:2000'],
+            'proof_file' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,pdf,zip', 'max:10240'],
         ];
     }
 
-    public function messages(): array
+    public function withValidator($validator): void
     {
-        return [
-            'proof.required_if' => 'Bukti pekerjaan wajib dilampirkan saat submit ke Review.',
-        ];
+        $validator->after(function ($validator) {
+            if ($this->input('status') === 'review'
+                && ! $this->filled('proof')
+                && ! $this->hasFile('proof_file')
+            ) {
+                $validator->errors()->add('proof', 'Bukti pekerjaan wajib dilampirkan saat submit ke Review.');
+            }
+        });
     }
 }

@@ -18,11 +18,29 @@ class TaskController extends Controller
 
     public function index(Request $request): Response
     {
-        $user = $request->user();
+        $user  = $request->user();
+        $isPm  = $user->role === 'project_manager';
 
-        // Hanya tampilkan task yang di-assign ke user (My Tasks)
-        $query = Task::with(['project', 'assignee'])
-            ->where('assigned_to', $user->id);
+        if ($isPm) {
+            // PM: tampilkan semua task dari project yang dia manage
+            $query = Task::with(['project', 'assignee'])
+                ->whereHas('project.members', fn ($q) => $q
+                    ->where('user_id', $user->id)
+                    ->where('project_members.role', 'manager')
+                );
+
+            $projects = Project::whereHas('members', fn ($q) => $q
+                ->where('user_id', $user->id)
+                ->where('project_members.role', 'manager')
+            )->orderBy('name')->get(['id', 'name']);
+        } else {
+            // Developer: hanya task yang di-assign ke user
+            $query = Task::with(['project', 'assignee'])
+                ->where('assigned_to', $user->id);
+
+            $projects = Project::whereHas('tasks', fn ($q) => $q->where('assigned_to', $user->id))
+                ->orderBy('name')->get(['id', 'name']);
+        }
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -38,14 +56,11 @@ class TaskController extends Controller
 
         $tasks = $query->latest()->paginate(15)->withQueryString();
 
-        // Dropdown filter: hanya project yang user punya task di sana
-        $projects = Project::whereHas('tasks', fn ($q) => $q->where('assigned_to', $user->id))
-            ->orderBy('name')->get(['id', 'name']);
-
         return Inertia::render('Tasks/Index', [
-            'tasks'   => $tasks,
-            'projects'=> $projects,
-            'filters' => $request->only(['status', 'priority', 'project_id']),
+            'tasks'    => $tasks,
+            'projects' => $projects,
+            'filters'  => $request->only(['status', 'priority', 'project_id']),
+            'is_pm'    => $isPm,
         ]);
     }
 
@@ -70,10 +85,28 @@ class TaskController extends Controller
     public function kanban(Request $request): Response
     {
         $user = $request->user();
+        $isPm = $user->role === 'project_manager';
 
-        // Kanban hanya tampilkan task milik user sendiri
-        $query = Task::with(['project', 'assignee'])
-            ->where('assigned_to', $user->id);
+        if ($isPm) {
+            $query = Task::with(['project', 'assignee'])
+                ->whereHas('project.members', fn ($q) => $q
+                    ->where('user_id', $user->id)
+                    ->where('project_members.role', 'manager')
+                );
+
+            $projects = Project::whereHas('members', fn ($q) => $q
+                ->where('user_id', $user->id)
+                ->where('project_members.role', 'manager')
+            )->orderBy('name')->get(['id', 'name']);
+        } else {
+            $query = Task::with(['project', 'assignee'])
+                ->where('assigned_to', $user->id);
+
+            $projects = Project::where(fn ($q) => $q
+                ->where('created_by', $user->id)
+                ->orWhereHas('members', fn ($m) => $m->where('user_id', $user->id))
+            )->orderBy('name')->get(['id', 'name']);
+        }
 
         if ($request->filled('project_id')) {
             $query->where('project_id', $request->project_id);
@@ -88,21 +121,17 @@ class TaskController extends Controller
             'done'        => $tasks->where('status', 'done')->values(),
         ];
 
-        $projects = Project::where(fn ($q) => $q
-            ->where('created_by', $user->id)
-            ->orWhereHas('members', fn ($m) => $m->where('user_id', $user->id))
-        )->orderBy('name')->get(['id', 'name']);
-
         return Inertia::render('Tasks/Kanban', [
             'columns'  => $columns,
             'projects' => $projects,
             'filters'  => $request->only(['project_id']),
+            'is_pm'    => $isPm,
         ]);
     }
 
     public function updateStatus(UpdateTaskStatusRequest $request, Task $task): RedirectResponse|JsonResponse
     {
-        $this->taskService->updateStatus($task, $request->status, $request->user(), $request->proof);
+        $this->taskService->updateStatus($task, $request->status, $request->user(), $request->proof, $request->file('proof_file'));
 
         if ($request->wantsJson()) {
             return response()->json(['success' => true]);

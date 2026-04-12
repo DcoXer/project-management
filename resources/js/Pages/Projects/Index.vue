@@ -46,13 +46,13 @@
                 >
                     <div class="flex items-start justify-between gap-2 mb-3">
                         <h3 class="font-semibold text-ink-900 dark:text-sage-200 text-sm leading-snug">{{ project.name }}</h3>
-                        <span :class="priorityClass(project.priority)" class="text-xs px-2 py-0.5 rounded-full font-medium shrink-0">{{ project.priority }}</span>
+                        <PriorityBadge :priority="project.priority" sm class="shrink-0" />
                     </div>
 
                     <p v-if="project.description" class="text-xs text-ink-400 dark:text-sage-500 mb-3 line-clamp-2">{{ project.description }}</p>
 
                     <div class="flex items-center gap-2 mb-4">
-                        <span :class="statusClass(project.status)" class="text-xs px-2 py-0.5 rounded-full font-medium">{{ statusLabel(project.status) }}</span>
+                        <ProjectStatusBadge :status="project.status" sm />
                         <span class="text-xs text-ink-300 dark:text-sage-600">oleh {{ project.creator.name }}</span>
                     </div>
 
@@ -95,6 +95,8 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Link, router } from '@inertiajs/vue3'
 import { reactive, computed } from 'vue'
+import ProjectStatusBadge from '@/Components/ProjectStatusBadge.vue'
+import PriorityBadge from '@/Components/PriorityBadge.vue'
 
 const props = defineProps({ projects: Object, filters: Object })
 
@@ -103,8 +105,4 @@ const hasFilter = computed(() => form.search || form.status || form.priority)
 
 const applyFilter = () => router.get('/projects', { search: form.search||undefined, status: form.status||undefined, priority: form.priority||undefined }, { preserveState: true, replace: true })
 const resetFilter = () => { form.search=''; form.status=''; form.priority=''; router.get('/projects', {}, { preserveState: false, replace: true }) }
-
-const statusLabel   = s => ({ planning:'Planning', in_progress:'In Progress', on_hold:'On Hold', completed:'Completed' }[s] ?? s)
-const statusClass   = s => ({ planning:'bg-ink-100 text-ink-600 dark:bg-ink-700/50 dark:text-ink-300', in_progress:'bg-sage-100 text-sage-700 dark:bg-sage-300/15 dark:text-sage-300', on_hold:'bg-amber-100 text-amber-700 dark:bg-amber-300/15 dark:text-amber-300', completed:'bg-emerald-100 text-emerald-700 dark:bg-emerald-300/15 dark:text-emerald-300' }[s] ?? 'bg-ink-100 text-ink-500')
-const priorityClass = p => ({ low:'bg-sage-100 text-sage-700 dark:bg-sage-300/15 dark:text-sage-300', medium:'bg-amber-100 text-amber-700 dark:bg-amber-300/15 dark:text-amber-300', high:'bg-red-100 text-red-700 dark:bg-red-300/15 dark:text-red-300' }[p] ?? 'bg-ink-100 text-ink-500')
 </script>

@@ -6,17 +6,27 @@ use App\Models\ActivityLog;
 use App\Models\Task;
 use App\Models\User;
 use App\Notifications\TaskStatusChanged;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class TaskService
 {
-    public function updateStatus(Task $task, string $newStatus, User $actor, ?string $proof = null): void
+    public function updateStatus(Task $task, string $newStatus, User $actor, ?string $proof = null, ?UploadedFile $proofFile = null): void
     {
         $oldStatus = $task->status;
 
         $data = ['status' => $newStatus];
 
-        if ($newStatus === 'review' && $proof) {
-            $data['proof'] = $proof;
+        if ($newStatus === 'review') {
+            if ($proof) {
+                $data['proof'] = $proof;
+            }
+            if ($proofFile) {
+                if ($task->proof_file) {
+                    Storage::disk('public')->delete($task->proof_file);
+                }
+                $data['proof_file'] = $proofFile->store('proof_files', 'public');
+            }
         }
 
         $task->update($data);
@@ -51,7 +61,17 @@ class TaskService
     public function reject(Task $task, User $actor, string $reason): void
     {
         $oldStatus = $task->status;
-        $task->update(['status' => 'in_progress', 'proof' => null, 'rejection_reason' => $reason]);
+
+        if ($task->proof_file) {
+            Storage::disk('public')->delete($task->proof_file);
+        }
+
+        $task->update([
+            'status'           => 'in_progress',
+            'proof'            => null,
+            'proof_file'       => null,
+            'rejection_reason' => $reason,
+        ]);
 
         ActivityLog::record(
             $actor,

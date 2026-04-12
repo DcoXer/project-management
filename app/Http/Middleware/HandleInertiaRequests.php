@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
                     'name' => $request->user()->name,
                     'email' => $request->user()->email,
                     'role' => $request->user()->role,
+                    'is_pm' => $request->user()->role === 'project_manager',
                     'unread_notifications_count' => $request->user()->unreadNotifications()->count(),
                 ] : null,
             ],

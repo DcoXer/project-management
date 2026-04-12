@@ -65,6 +65,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Link, router } from '@inertiajs/vue3'
+import { taskStatusLabel, formatDateTime } from '@/composables/useFormatters'
 
 defineProps({ notifications: Object })
 
@@ -73,7 +74,4 @@ const markAllRead = ()  => router.patch('/notifications/read-all')
 
 const notifIcon   = t => ({ task_assigned:'📋', task_commented:'💬', task_status_changed:'🔄' }[t] ?? '🔔')
 const notifIconBg = t => ({ task_assigned:'bg-sage-100 dark:bg-sage-300/10', task_commented:'bg-violet-100 dark:bg-violet-300/10', task_status_changed:'bg-amber-100 dark:bg-amber-300/10' }[t] ?? 'bg-ink-100 dark:bg-ink-700')
-
-const taskStatusLabel = s => ({ todo:'Todo', in_progress:'In Progress', review:'Review', done:'Done' }[s] ?? s)
-const formatDateTime  = d => d ? new Date(d).toLocaleString('id-ID', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '-'
 </script>

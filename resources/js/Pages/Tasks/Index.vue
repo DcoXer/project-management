@@ -4,8 +4,8 @@
 
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h1 class="text-2xl font-bold text-ink-900 dark:text-sage-200 tracking-tight">My Tasks</h1>
-                    <p class="text-sm text-ink-500 dark:text-sage-500 mt-1">Task yang di-assign ke kamu</p>
+                    <h1 class="text-2xl font-bold text-ink-900 dark:text-sage-200 tracking-tight">{{ is_pm ? 'Team Tasks' : 'My Tasks' }}</h1>
+                    <p class="text-sm text-ink-500 dark:text-sage-500 mt-1">{{ is_pm ? 'Semua task dari project yang kamu pimpin' : 'Task yang di-assign ke kamu' }}</p>
                 </div>
                 <Link href="/tasks/kanban"
                     class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-ink-200 dark:border-ink-600 text-ink-600 dark:text-sage-400 hover:bg-ink-100 dark:hover:bg-ink-700 transition">
@@ -59,9 +59,9 @@
                             <td class="px-5 py-3.5 font-medium text-ink-900 dark:text-sage-200 max-w-xs"><span class="block truncate">{{ task.title }}</span></td>
                             <td class="px-4 py-3.5 text-ink-500 dark:text-sage-400 max-w-[140px]"><span class="block truncate">{{ task.project?.name ?? '-' }}</span></td>
                             <td class="px-4 py-3.5 text-ink-500 dark:text-sage-400">{{ task.assignee?.name ?? '-' }}</td>
-                            <td class="px-4 py-3.5"><span :class="priorityClass(task.priority)" class="text-xs px-2 py-0.5 rounded-full font-medium">{{ task.priority }}</span></td>
-                            <td class="px-4 py-3.5"><span :class="taskStatusClass(task.status)" class="text-xs px-2 py-0.5 rounded-full font-medium">{{ taskStatusLabel(task.status) }}</span></td>
-                            <td class="px-4 py-3.5 text-ink-400 dark:text-sage-500">{{ task.due_date ? formatDate(task.due_date) : '-' }}</td>
+                            <td class="px-4 py-3.5"><PriorityBadge :priority="task.priority" sm /></td>
+                            <td class="px-4 py-3.5"><TaskStatusBadge :status="task.status" sm /></td>
+                            <td class="px-4 py-3.5 text-ink-400 dark:text-sage-500">{{ formatDate(task.due_date) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -85,17 +85,15 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Link, router } from '@inertiajs/vue3'
 import { reactive, computed } from 'vue'
+import { formatDate } from '@/composables/useFormatters'
+import TaskStatusBadge from '@/Components/TaskStatusBadge.vue'
+import PriorityBadge from '@/Components/PriorityBadge.vue'
 
-const props = defineProps({ tasks: Object, projects: Array, filters: Object })
+const props = defineProps({ tasks: Object, projects: Array, filters: Object, is_pm: Boolean })
 
 const form = reactive({ status: props.filters?.status ?? '', priority: props.filters?.priority ?? '', project_id: props.filters?.project_id ?? '' })
 const hasFilter = computed(() => form.status || form.priority || form.project_id)
 
 const applyFilter = () => router.get('/tasks', { status: form.status||undefined, priority: form.priority||undefined, project_id: form.project_id||undefined }, { preserveState: true, replace: true })
 const resetFilter = () => { form.status=''; form.priority=''; form.project_id=''; router.get('/tasks', {}, { preserveState: false, replace: true }) }
-
-const taskStatusLabel = s => ({ todo:'Todo', in_progress:'In Progress', review:'Review', done:'Done' }[s] ?? s)
-const taskStatusClass = s => ({ todo:'bg-ink-100 text-ink-600 dark:bg-ink-700/50 dark:text-ink-300', in_progress:'bg-sage-100 text-sage-700 dark:bg-sage-300/15 dark:text-sage-300', review:'bg-violet-100 text-violet-700 dark:bg-violet-300/15 dark:text-violet-300', done:'bg-emerald-100 text-emerald-700 dark:bg-emerald-300/15 dark:text-emerald-300' }[s] ?? 'bg-ink-100 text-ink-500')
-const priorityClass   = p => ({ low:'bg-sage-100 text-sage-700 dark:bg-sage-300/15 dark:text-sage-300', medium:'bg-amber-100 text-amber-700 dark:bg-amber-300/15 dark:text-amber-300', high:'bg-red-100 text-red-700 dark:bg-red-300/15 dark:text-red-300' }[p] ?? 'bg-ink-100 text-ink-500')
-const formatDate      = d => d ? new Date(d).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) : '-'
 </script>

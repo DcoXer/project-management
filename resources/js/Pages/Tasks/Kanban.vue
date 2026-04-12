@@ -119,18 +119,15 @@
 
                             <!-- Footer -->
                             <div class="flex items-center justify-between gap-2">
-                                <span :class="priorityClass(task.priority)" class="text-[11px] px-2 py-0.5 rounded-full font-medium capitalize">
-                                    {{ task.priority }}
-                                </span>
+                                <PriorityBadge :priority="task.priority" sm />
                                 <div class="flex items-center gap-1.5">
                                     <span v-if="task.due_date" class="text-[11px] text-ink-400 dark:text-sage-500"
                                         :class="{ 'text-red-500 dark:text-red-400 font-medium': isOverdue(task) }">
-                                        {{ formatDate(task.due_date) }}
+                                        {{ formatDateShort(task.due_date) }}
                                     </span>
-                                    <div v-if="task.assignee" :title="task.assignee.name"
-                                        class="w-6 h-6 rounded-full bg-sage-300 text-ink-900 text-[10px] font-bold flex items-center justify-center shrink-0">
-                                        {{ task.assignee.name.charAt(0).toUpperCase() }}
-                                    </div>
+                                    <UserAvatar v-if="task.assignee" :name="task.assignee.name" size="sm"
+                                        :title="task.assignee.name"
+                                        class="bg-sage-300 text-ink-900" />
                                 </div>
                             </div>
 
@@ -145,29 +142,6 @@
                 </div>
             </div>
 
-            <!-- Toast -->
-            <Transition
-                enter-active-class="transition duration-200 ease-out"
-                enter-from-class="opacity-0 translate-y-2"
-                enter-to-class="opacity-100 translate-y-0"
-                leave-active-class="transition duration-150 ease-in"
-                leave-from-class="opacity-100 translate-y-0"
-                leave-to-class="opacity-0 translate-y-2"
-            >
-                <div v-if="toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg text-sm font-medium max-w-sm"
-                    :class="toast.type === 'success'
-                        ? 'bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-400/20 text-emerald-700 dark:text-emerald-300'
-                        : 'bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-400/20 text-red-700 dark:text-red-400'">
-                    <svg v-if="toast.type === 'success'" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <svg v-else class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                    </svg>
-                    {{ toast.message }}
-                </div>
-            </Transition>
-
         </div>
     </AppLayout>
 </template>
@@ -177,6 +151,10 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import { Link, router, usePage } from '@inertiajs/vue3'
 import { reactive, ref } from 'vue'
 import axios from 'axios'
+import { priorityClass, formatDateShort, isOverdue } from '@/composables/useFormatters'
+import { useToast } from '@/composables/useToast'
+import PriorityBadge from '@/Components/PriorityBadge.vue'
+import UserAvatar from '@/Components/UserAvatar.vue'
 
 const props = defineProps({ columns: Object, projects: Array, filters: Object })
 
@@ -200,19 +178,11 @@ const columnList = [
 const dragging    = ref(null)
 const dragFromCol = ref(null)
 const dragOverCol = ref(null)
-const toast       = ref(null)
 const selectedProject = ref(props.filters?.project_id ?? '')
-
-let toastTimer = null
+const { success: toastSuccess, error: toastError } = useToast()
 
 // Hanya task Todo milik user sendiri (sebagai assignee) yang bisa di-drag ke In Progress
 const isDraggable = (task, colKey) => colKey === 'todo' && task.assigned_to === authUser.id
-
-const showToast = (message, type = 'success') => {
-    clearTimeout(toastTimer)
-    toast.value = { message, type }
-    toastTimer = setTimeout(() => { toast.value = null }, 4000)
-}
 
 const onDragStart = (task, colKey) => {
     dragging.value    = task
@@ -236,12 +206,12 @@ const onDrop = async (toCol) => {
             review: 'Submit ke Review wajib lewat halaman detail task dan lampirkan bukti pekerjaan.',
             done:   'Status Done hanya bisa ditetapkan oleh Project Manager setelah approve review.',
         }
-        showToast(messages[toCol] ?? 'Perubahan status ini harus dilakukan lewat halaman detail task.', 'error')
+        toastError(messages[toCol] ?? 'Perubahan status ini harus dilakukan lewat halaman detail task.')
         return
     }
 
     if (task.assigned_to !== authUser.id) {
-        showToast('Kamu bukan assignee task ini, tidak bisa mengubah statusnya.', 'error')
+        toastError('Kamu bukan assignee task ini, tidak bisa mengubah statusnya.')
         return
     }
 
@@ -253,7 +223,7 @@ const onDrop = async (toCol) => {
         await axios.patch(`/tasks/${task.id}/status`, { status: toCol }, {
             headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
         })
-        showToast('Task dimulai, status berubah ke In Progress.')
+        toastSuccess('Task dimulai, status berubah ke In Progress.')
     } catch (err) {
         // Rollback on error
         localColumns[toCol] = localColumns[toCol].filter(t => t.id !== task.id)
@@ -261,7 +231,7 @@ const onDrop = async (toCol) => {
         const msg = err.response?.status === 403
             ? 'Kamu tidak punya akses untuk mengubah status task ini.'
             : 'Gagal mengubah status, coba lagi.'
-        showToast(msg, 'error')
+        toastError(msg)
     }
 }
 
@@ -272,12 +242,4 @@ const applyFilter = () => {
     )
 }
 
-const priorityClass = p => ({
-    low:    'bg-sage-100 text-sage-700 dark:bg-sage-300/15 dark:text-sage-300',
-    medium: 'bg-amber-100 text-amber-700 dark:bg-amber-300/15 dark:text-amber-300',
-    high:   'bg-red-100 text-red-700 dark:bg-red-300/15 dark:text-red-300',
-}[p] ?? 'bg-ink-100 text-ink-500')
-
-const formatDate = d => d ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : ''
-const isOverdue  = task => task.due_date && task.status !== 'done' && new Date(task.due_date) < new Date()
 </script>
