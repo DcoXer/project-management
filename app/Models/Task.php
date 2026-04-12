@@ -13,6 +13,8 @@ class Task extends Model
 {
     use HasFactory;
 
+    protected $appends = ['deadline_status'];
+
     protected function casts(): array
     {
         return [

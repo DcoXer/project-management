@@ -72,6 +72,12 @@ defineProps({ notifications: Object })
 const markRead    = id => router.patch(`/notifications/${id}/read`)
 const markAllRead = ()  => router.patch('/notifications/read-all')
 
-const notifIcon   = t => ({ task_assigned:'📋', task_commented:'💬', task_status_changed:'🔄' }[t] ?? '🔔')
-const notifIconBg = t => ({ task_assigned:'bg-sage-100 dark:bg-sage-300/10', task_commented:'bg-violet-100 dark:bg-violet-300/10', task_status_changed:'bg-amber-100 dark:bg-amber-300/10' }[t] ?? 'bg-ink-100 dark:bg-ink-700')
+const notifIcon   = t => ({ task_assigned: '📋', task_commented: '💬', task_status_changed: '🔄', deadline_reminder: '⏰', task_overdue: '🚨' }[t] ?? '🔔')
+const notifIconBg = t => ({
+    task_assigned:       'bg-sage-100 dark:bg-sage-300/10',
+    task_commented:      'bg-violet-100 dark:bg-violet-300/10',
+    task_status_changed: 'bg-amber-100 dark:bg-amber-300/10',
+    deadline_reminder:   'bg-amber-100 dark:bg-amber-300/10',
+    task_overdue:        'bg-red-100 dark:bg-red-300/10',
+}[t] ?? 'bg-ink-100 dark:bg-ink-700')
 </script>

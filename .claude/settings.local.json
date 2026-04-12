@@ -15,7 +15,9 @@
       "Bash(tasklist:*)",
       "Bash(cmd:*)",
       "Bash(powershell:*)",
-      "Bash(composer require:*)"
+      "Bash(composer require:*)",
+      "Bash(grep -E \"\\\\.\\(vue|js\\)$\")",
+      "Bash(node:*)"
     ]
   }
 }

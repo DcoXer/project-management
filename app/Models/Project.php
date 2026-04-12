@@ -12,6 +12,8 @@ class Project extends Model
 {
     use HasFactory;
 
+    protected $appends = ['progress'];
+
     protected function casts(): array
     {
         return [

@@ -225,7 +225,9 @@
                     mode="out-in"
                 >
                     <SkeletonLoading v-if="isNavigating" key="skeleton" />
-                    <slot v-else key="content" />
+                    <div v-else key="content">
+                        <slot />
+                    </div>
                 </Transition>
             </main>
         </div>

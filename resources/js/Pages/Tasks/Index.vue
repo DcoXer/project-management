@@ -40,31 +40,80 @@
                 </div>
             </div>
 
-            <!-- Table -->
-            <div class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 overflow-hidden shadow-sm">
+            <!-- Task list -->
+            <div class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 shadow-sm overflow-hidden">
                 <div v-if="tasks.data.length === 0" class="px-5 py-12 text-center text-sm text-ink-300 dark:text-sage-600">Tidak ada task ditemukan.</div>
-                <table v-else class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b border-ink-100 dark:border-sage-300/8 bg-sage-50 dark:bg-ink-850">
-                            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Task</th>
-                            <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Project</th>
-                            <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Assignee</th>
-                            <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Priority</th>
-                            <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Status</th>
-                            <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Due</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-ink-50 dark:divide-sage-300/5">
-                        <tr v-for="task in tasks.data" :key="task.id" class="hover:bg-sage-50 dark:hover:bg-sage-300/4 transition cursor-pointer" @click="router.visit(`/tasks/${task.id}`)">
-                            <td class="px-5 py-3.5 font-medium text-ink-900 dark:text-sage-200 max-w-xs"><span class="block truncate">{{ task.title }}</span></td>
-                            <td class="px-4 py-3.5 text-ink-500 dark:text-sage-400 max-w-[140px]"><span class="block truncate">{{ task.project?.name ?? '-' }}</span></td>
-                            <td class="px-4 py-3.5 text-ink-500 dark:text-sage-400">{{ task.assignee?.name ?? '-' }}</td>
-                            <td class="px-4 py-3.5"><PriorityBadge :priority="task.priority" sm /></td>
-                            <td class="px-4 py-3.5"><TaskStatusBadge :status="task.status" sm /></td>
-                            <td class="px-4 py-3.5 text-ink-400 dark:text-sage-500">{{ formatDate(task.due_date) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <template v-else>
+
+                    <!-- ── Mobile: card list (< md) ────────────────────── -->
+                    <div class="divide-y divide-ink-50 dark:divide-sage-300/5 md:hidden">
+                        <div v-for="task in tasks.data" :key="task.id"
+                            class="px-4 py-3.5 hover:bg-sage-50 dark:hover:bg-sage-300/4 transition cursor-pointer active:bg-sage-100 dark:active:bg-sage-300/8"
+                            @click="router.visit(`/tasks/${task.id}`)">
+                            <div class="flex items-start justify-between gap-2 mb-1.5">
+                                <p class="font-medium text-ink-900 dark:text-sage-200 text-sm leading-snug flex-1">{{ task.title }}</p>
+                                <TaskStatusBadge :status="task.status" sm />
+                            </div>
+                            <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
+                                <span class="text-xs text-ink-400 dark:text-sage-500 truncate max-w-[140px]">{{ task.project?.name ?? '-' }}</span>
+                                <span class="text-ink-200 dark:text-sage-700">·</span>
+                                <PriorityBadge :priority="task.priority" sm />
+                                <template v-if="task.deadline_status === 'overdue'">
+                                    <span class="text-ink-200 dark:text-sage-700">·</span>
+                                    <span class="text-xs text-red-600 dark:text-red-400 font-medium">{{ formatDate(task.due_date) }}</span>
+                                    <span class="text-[10px] bg-red-100 dark:bg-red-400/15 text-red-600 dark:text-red-400 px-1.5 py-0.5 rounded font-semibold">Overdue</span>
+                                </template>
+                                <template v-else-if="task.deadline_status === 'warning'">
+                                    <span class="text-ink-200 dark:text-sage-700">·</span>
+                                    <span class="text-xs text-amber-600 dark:text-amber-400">{{ formatDate(task.due_date) }}</span>
+                                    <span class="text-[10px] bg-amber-100 dark:bg-amber-400/15 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded font-semibold">Due soon</span>
+                                </template>
+                                <template v-else-if="task.due_date">
+                                    <span class="text-ink-200 dark:text-sage-700">·</span>
+                                    <span class="text-xs text-ink-400 dark:text-sage-500">{{ formatDate(task.due_date) }}</span>
+                                </template>
+                            </div>
+                            <p v-if="task.assignee" class="text-xs text-ink-400 dark:text-sage-600 mt-1">{{ task.assignee.name }}</p>
+                        </div>
+                    </div>
+
+                    <!-- ── Desktop: table (≥ md) ───────────────────────── -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="w-full text-sm min-w-[640px]">
+                            <thead>
+                                <tr class="border-b border-ink-100 dark:border-sage-300/8 bg-sage-50 dark:bg-ink-850">
+                                    <th class="text-left px-5 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Task</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Project</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Assignee</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Priority</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Status</th>
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-ink-400 dark:text-sage-500 uppercase tracking-wide">Due</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-ink-50 dark:divide-sage-300/5">
+                                <tr v-for="task in tasks.data" :key="task.id" class="hover:bg-sage-50 dark:hover:bg-sage-300/4 transition cursor-pointer" @click="router.visit(`/tasks/${task.id}`)">
+                                    <td class="px-5 py-3.5 font-medium text-ink-900 dark:text-sage-200 max-w-xs"><span class="block truncate">{{ task.title }}</span></td>
+                                    <td class="px-4 py-3.5 text-ink-500 dark:text-sage-400 max-w-[140px]"><span class="block truncate">{{ task.project?.name ?? '-' }}</span></td>
+                                    <td class="px-4 py-3.5 text-ink-500 dark:text-sage-400">{{ task.assignee?.name ?? '-' }}</td>
+                                    <td class="px-4 py-3.5"><PriorityBadge :priority="task.priority" sm /></td>
+                                    <td class="px-4 py-3.5"><TaskStatusBadge :status="task.status" sm /></td>
+                                    <td class="px-4 py-3.5">
+                                        <template v-if="task.deadline_status === 'overdue'">
+                                            <span class="text-xs text-red-600 dark:text-red-400 font-medium">{{ formatDate(task.due_date) }}</span>
+                                            <span class="ml-1.5 text-[10px] bg-red-100 dark:bg-red-400/15 text-red-600 dark:text-red-400 px-1.5 py-0.5 rounded font-semibold">Overdue</span>
+                                        </template>
+                                        <template v-else-if="task.deadline_status === 'warning'">
+                                            <span class="text-xs text-amber-600 dark:text-amber-400 font-medium">{{ formatDate(task.due_date) }}</span>
+                                            <span class="ml-1.5 text-[10px] bg-amber-100 dark:bg-amber-400/15 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded font-semibold">Due soon</span>
+                                        </template>
+                                        <span v-else class="text-xs text-ink-400 dark:text-sage-500">{{ formatDate(task.due_date) }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </template>
             </div>
 
             <!-- Pagination -->
