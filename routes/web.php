@@ -29,7 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/projects/{project}/export-pdf', [ProjectController::class, 'exportPdf'])->name('projects.exportPdf');
 
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
     Route::get('/tasks/kanban', [TaskController::class, 'kanban'])->name('tasks.kanban');
+    Route::get('/tasks/export-pdf', [TaskController::class, 'exportPdf'])->name('tasks.exportPdf');
     Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
     Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
     Route::post('/tasks/{task}/approve', [TaskController::class, 'approve'])->name('tasks.approve');

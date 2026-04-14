@@ -7,14 +7,134 @@
                     <h1 class="text-2xl font-bold text-ink-900 dark:text-sage-200 tracking-tight">{{ is_pm ? 'Team Tasks' : 'My Tasks' }}</h1>
                     <p class="text-sm text-ink-500 dark:text-sage-500 mt-1">{{ is_pm ? 'Semua task dari project yang kamu pimpin' : 'Task yang di-assign ke kamu' }}</p>
                 </div>
-                <Link href="/tasks/kanban"
-                    class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-ink-200 dark:border-ink-600 text-ink-600 dark:text-sage-400 hover:bg-ink-100 dark:hover:bg-ink-700 transition">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
-                    </svg>
-                    Kanban View
-                </Link>
+                <div class="flex items-center gap-2">
+                    <button v-if="is_pm" @click="showCreateModal = true"
+                        class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 hover:opacity-90 transition">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Buat Task
+                    </button>
+                    <!-- <a :href="exportUrl"
+                        class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-ink-200 dark:border-ink-600 text-ink-600 dark:text-sage-400 hover:bg-ink-100 dark:hover:bg-ink-700 transition">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Export PDF
+                    </a> -->
+                    <Link href="/tasks/kanban"
+                        class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-ink-200 dark:border-ink-600 text-ink-600 dark:text-sage-400 hover:bg-ink-100 dark:hover:bg-ink-700 transition">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
+                        </svg>
+                        Kanban View
+                    </Link>
+                </div>
             </div>
+
+            <!-- Modal Buat Task -->
+            <Teleport to="body">
+                <Transition
+                    enter-active-class="transition duration-200 ease-out"
+                    enter-from-class="opacity-0"
+                    enter-to-class="opacity-100"
+                    leave-active-class="transition duration-150 ease-in"
+                    leave-from-class="opacity-100"
+                    leave-to-class="opacity-0"
+                >
+                    <div v-if="showCreateModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" @mousedown.self="closeModal">
+                        <Transition
+                            enter-active-class="transition duration-200 ease-out"
+                            enter-from-class="opacity-0 scale-95"
+                            enter-to-class="opacity-100 scale-100"
+                            leave-active-class="transition duration-150 ease-in"
+                            leave-from-class="opacity-100 scale-100"
+                            leave-to-class="opacity-0 scale-95"
+                        >
+                            <div v-if="showCreateModal" class="bg-white dark:bg-ink-800 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+
+                                <!-- Header -->
+                                <div class="flex items-center justify-between px-6 py-4 border-b border-ink-100 dark:border-sage-300/8">
+                                    <h2 class="text-base font-semibold text-ink-900 dark:text-sage-200">Buat Task Baru</h2>
+                                    <button @click="closeModal" class="p-1.5 rounded-lg text-ink-400 dark:text-sage-500 hover:bg-ink-100 dark:hover:bg-sage-300/8 transition">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Form -->
+                                <form @submit.prevent="submitCreate" class="px-6 py-5 space-y-4">
+
+                                    <!-- Project -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Project <span class="text-red-500">*</span></label>
+                                        <select v-model="createForm.project_id" @change="createForm.assigned_to = ''" class="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition"
+                                            :class="createForm.errors.project_id ? 'border-red-400' : 'border-ink-200 dark:border-ink-600'">
+                                            <option value="">Pilih project...</option>
+                                            <option v-for="p in managed_projects" :key="p.id" :value="p.id">{{ p.name }}</option>
+                                        </select>
+                                        <p v-if="createForm.errors.project_id" class="mt-1 text-xs text-red-500">{{ createForm.errors.project_id }}</p>
+                                    </div>
+
+                                    <!-- Title -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Judul Task <span class="text-red-500">*</span></label>
+                                        <input v-model="createForm.title" type="text" placeholder="Masukkan judul task..." class="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 placeholder-ink-300 dark:placeholder-sage-600 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition"
+                                            :class="createForm.errors.title ? 'border-red-400' : 'border-ink-200 dark:border-ink-600'" />
+                                        <p v-if="createForm.errors.title" class="mt-1 text-xs text-red-500">{{ createForm.errors.title }}</p>
+                                    </div>
+
+                                    <!-- Description -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Deskripsi</label>
+                                        <textarea v-model="createForm.description" rows="3" placeholder="Deskripsi task (opsional)..." class="w-full border border-ink-200 dark:border-ink-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 placeholder-ink-300 dark:placeholder-sage-600 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition resize-none"></textarea>
+                                    </div>
+
+                                    <!-- Assignee -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Assignee <span class="text-red-500">*</span></label>
+                                        <select v-model="createForm.assigned_to" :disabled="!createForm.project_id" class="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                            :class="createForm.errors.assigned_to ? 'border-red-400' : 'border-ink-200 dark:border-ink-600'">
+                                            <option value="">{{ createForm.project_id ? 'Pilih anggota...' : 'Pilih project dulu...' }}</option>
+                                            <option v-for="m in selectedProjectMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
+                                        </select>
+                                        <p v-if="createForm.errors.assigned_to" class="mt-1 text-xs text-red-500">{{ createForm.errors.assigned_to }}</p>
+                                    </div>
+
+                                    <!-- Priority & Due Date -->
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Priority <span class="text-red-500">*</span></label>
+                                            <select v-model="createForm.priority" class="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition"
+                                                :class="createForm.errors.priority ? 'border-red-400' : 'border-ink-200 dark:border-ink-600'">
+                                                <option value="low">Low</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="high">High</option>
+                                            </select>
+                                            <p v-if="createForm.errors.priority" class="mt-1 text-xs text-red-500">{{ createForm.errors.priority }}</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Due Date</label>
+                                            <input v-model="createForm.due_date" type="date" class="w-full border border-ink-200 dark:border-ink-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Actions -->
+                                    <div class="flex items-center justify-end gap-2 pt-2 border-t border-ink-100 dark:border-sage-300/8">
+                                        <button type="button" @click="closeModal" class="px-4 py-2 text-sm font-medium text-ink-600 dark:text-sage-400 hover:bg-ink-100 dark:hover:bg-sage-300/8 rounded-lg transition">
+                                            Batal
+                                        </button>
+                                        <button type="submit" :disabled="createForm.processing" class="px-4 py-2 text-sm font-medium bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 rounded-lg hover:opacity-90 transition disabled:opacity-60">
+                                            {{ createForm.processing ? 'Menyimpan...' : 'Buat Task' }}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </Transition>
+                    </div>
+                </Transition>
+            </Teleport>
 
             <!-- Filters -->
             <div class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 p-4 shadow-sm">
@@ -132,17 +252,62 @@
 
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { Link, router } from '@inertiajs/vue3'
-import { reactive, computed } from 'vue'
+import { Link, router, useForm } from '@inertiajs/vue3'
+import { reactive, computed, ref } from 'vue'
 import { formatDate } from '@/composables/useFormatters'
 import TaskStatusBadge from '@/Components/TaskStatusBadge.vue'
 import PriorityBadge from '@/Components/PriorityBadge.vue'
 
-const props = defineProps({ tasks: Object, projects: Array, filters: Object, is_pm: Boolean })
+const props = defineProps({
+    tasks: Object,
+    projects: Array,
+    managed_projects: { type: Array, default: () => [] },
+    filters: Object,
+    is_pm: Boolean,
+})
 
 const form = reactive({ status: props.filters?.status ?? '', priority: props.filters?.priority ?? '', project_id: props.filters?.project_id ?? '' })
 const hasFilter = computed(() => form.status || form.priority || form.project_id)
 
+const exportUrl = computed(() => {
+    const params = new URLSearchParams()
+    if (form.status)     params.set('status', form.status)
+    if (form.priority)   params.set('priority', form.priority)
+    if (form.project_id) params.set('project_id', form.project_id)
+    const qs = params.toString()
+    return '/tasks/export-pdf' + (qs ? '?' + qs : '')
+})
+
 const applyFilter = () => router.get('/tasks', { status: form.status||undefined, priority: form.priority||undefined, project_id: form.project_id||undefined }, { preserveState: true, replace: true })
 const resetFilter = () => { form.status=''; form.priority=''; form.project_id=''; router.get('/tasks', {}, { preserveState: false, replace: true }) }
+
+// ── Create Task Modal ───────────────────────────────────────────────────
+const showCreateModal = ref(false)
+
+const createForm = useForm({
+    project_id:  '',
+    title:       '',
+    description: '',
+    assigned_to: '',
+    priority:    'medium',
+    due_date:    '',
+})
+
+const selectedProjectMembers = computed(() => {
+    if (!createForm.project_id) return []
+    const project = props.managed_projects.find(p => p.id === createForm.project_id)
+    return project?.members ?? []
+})
+
+const closeModal = () => {
+    showCreateModal.value = false
+    createForm.reset()
+    createForm.clearErrors()
+}
+
+const submitCreate = () => {
+    createForm.post('/tasks', {
+        onSuccess: () => closeModal(),
+    })
+}
 </script>

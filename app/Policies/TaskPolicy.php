@@ -22,6 +22,11 @@ class TaskPolicy
             ->exists();
     }
 
+    public function create(User $user): bool
+    {
+        return $user->role === 'project_manager';
+    }
+
     public function view(User $user, Task $task): bool
     {
         return $this->isInvolved($user, $task);

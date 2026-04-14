@@ -24,6 +24,26 @@ class TaskResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->role === 'project_manager';
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->role === 'project_manager';
+    }
+
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->role === 'project_manager';
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->role === 'project_manager';
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return 'Management';

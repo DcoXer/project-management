@@ -21,11 +21,13 @@ class TaskService
             if ($proof) {
                 $data['proof'] = $proof;
             }
-            if ($proofFile) {
+            if ($proofFile && $proofFile->isValid()) {
                 if ($task->proof_file) {
                     Storage::disk('public')->delete($task->proof_file);
                 }
-                $data['proof_file'] = $proofFile->store('proof_files', 'public');
+                $storagePath = 'proof_files/' . $proofFile->hashName();
+                Storage::disk('public')->put($storagePath, $proofFile->get());
+                $data['proof_file'] = $storagePath;
             }
         }
 
