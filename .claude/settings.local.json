@@ -19,7 +19,8 @@
       "Bash(grep -E \"\\\\.\\(vue|js\\)$\")",
       "Bash(node:*)",
       "Bash(sed -n '88,100p' /c/laragon/www/project-management/vendor/laravel/framework/src/Illuminate/Http/UploadedFile.php)",
-      "Bash(sed -n '30,40p' /c/laragon/www/project-management/vendor/laravel/framework/src/Illuminate/Http/UploadedFile.php)"
+      "Bash(sed -n '30,40p' /c/laragon/www/project-management/vendor/laravel/framework/src/Illuminate/Http/UploadedFile.php)",
+      "Bash(grep *)"
     ]
   }
 }

@@ -16,6 +16,15 @@
                 <div class="flex items-center gap-2 shrink-0">
                     <PriorityBadge :priority="project.priority" />
                     <ProjectStatusBadge :status="project.status" />
+                    <button v-if="is_pm && project.status === 'planning'"
+                        @click="startProject"
+                        :disabled="startForm.processing"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition disabled:opacity-60">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                        </svg>
+                        Mulai Project
+                    </button>
                     <a :href="`/projects/${project.id}/export-pdf`" target="_blank"
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 hover:bg-ink-700 dark:hover:bg-sage-200 transition">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
@@ -210,7 +219,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { usePage, Link } from '@inertiajs/vue3'
+import { usePage, Link, useForm } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { formatDate, specializationLabel } from '@/composables/useFormatters'
 import ProjectStatusBadge from '@/Components/ProjectStatusBadge.vue'
@@ -218,7 +227,7 @@ import TaskStatusBadge from '@/Components/TaskStatusBadge.vue'
 import PriorityBadge from '@/Components/PriorityBadge.vue'
 import UserAvatar from '@/Components/UserAvatar.vue'
 
-const props = defineProps({ project: Object })
+const props = defineProps({ project: Object, is_pm: Boolean })
 
 const auth = usePage().props.auth
 const isPmOrAdmin = auth.user.is_pm || auth.user.role === 'admin'
@@ -248,4 +257,9 @@ const memberWorkload = computed(() => {
 const unassignedTasks = computed(() =>
     (props.project.tasks ?? []).filter(t => !t.assignee)
 )
+
+const startForm = useForm({})
+const startProject = () => {
+    startForm.post(`/projects/${props.project.id}/start`)
+}
 </script>

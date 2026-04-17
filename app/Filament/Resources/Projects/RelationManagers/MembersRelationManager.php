@@ -6,10 +6,10 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Actions\AttachAction;
-use Filament\Tables\Actions\DetachAction;
-use Filament\Tables\Actions\DetachBulkAction;
-use Filament\Tables\Actions\EditAction;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\DetachBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -20,13 +20,9 @@ class MembersRelationManager extends RelationManager
     protected static ?string $title = 'Anggota Tim';
 
     public const SPECIALIZATIONS = [
-        'frontend'    => 'Frontend Developer',
-        'backend'     => 'Backend Developer',
-        'ui_ux'       => 'UI/UX Designer',
-        'qa'          => 'QA Engineer',
-        'devops'      => 'DevOps Engineer',
-        'mobile'      => 'Mobile Developer',
-        'pentesting'  => 'Pentesting Web/Mobile',
+        'backend'  => 'Backend',
+        'frontend' => 'Frontend',
+        'ui/ux'    => 'UI/UX',
     ];
 
     public function table(Table $table): Table

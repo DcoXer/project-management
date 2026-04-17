@@ -69,7 +69,7 @@
                                     <!-- Project -->
                                     <div>
                                         <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Project <span class="text-red-500">*</span></label>
-                                        <select v-model="createForm.project_id" @change="createForm.assigned_to = ''" class="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition"
+                                        <select v-model="createForm.project_id" class="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition"
                                             :class="createForm.errors.project_id ? 'border-red-400' : 'border-ink-200 dark:border-ink-600'">
                                             <option value="">Pilih project...</option>
                                             <option v-for="p in managed_projects" :key="p.id" :value="p.id">{{ p.name }}</option>
@@ -91,13 +91,22 @@
                                         <textarea v-model="createForm.description" rows="3" placeholder="Deskripsi task (opsional)..." class="w-full border border-ink-200 dark:border-ink-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 placeholder-ink-300 dark:placeholder-sage-600 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition resize-none"></textarea>
                                     </div>
 
+                                    <!-- Specialization -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Specialization <span class="text-red-500">*</span></label>
+                                        <select v-model="selectedSpecialization" @change="createForm.assigned_to = ''" class="w-full border border-ink-200 dark:border-ink-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition">
+                                            <option value="">Pilih specialization...</option>
+                                            <option v-for="s in specializations" :key="s.value" :value="s.value">{{ s.label }}</option>
+                                        </select>
+                                    </div>
+
                                     <!-- Assignee -->
                                     <div>
                                         <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Assignee <span class="text-red-500">*</span></label>
-                                        <select v-model="createForm.assigned_to" :disabled="!createForm.project_id" class="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                        <select v-model="createForm.assigned_to" :disabled="!selectedSpecialization" class="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition disabled:opacity-50 disabled:cursor-not-allowed"
                                             :class="createForm.errors.assigned_to ? 'border-red-400' : 'border-ink-200 dark:border-ink-600'">
-                                            <option value="">{{ createForm.project_id ? 'Pilih anggota...' : 'Pilih project dulu...' }}</option>
-                                            <option v-for="m in selectedProjectMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
+                                            <option value="">{{ selectedSpecialization ? (filteredDevelopers.length ? 'Pilih developer...' : 'Tidak ada developer tersedia') : 'Pilih specialization dulu...' }}</option>
+                                            <option v-for="d in filteredDevelopers" :key="d.id" :value="d.id">{{ d.name }}</option>
                                         </select>
                                         <p v-if="createForm.errors.assigned_to" class="mt-1 text-xs text-red-500">{{ createForm.errors.assigned_to }}</p>
                                     </div>
@@ -115,7 +124,7 @@
                                             <p v-if="createForm.errors.priority" class="mt-1 text-xs text-red-500">{{ createForm.errors.priority }}</p>
                                         </div>
                                         <div>
-                                            <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Due Date</label>
+                                            <label class="block text-sm font-medium text-ink-700 dark:text-sage-300 mb-1.5">Deadline</label>
                                             <input v-model="createForm.due_date" type="date" class="w-full border border-ink-200 dark:border-ink-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-ink-850 text-ink-900 dark:text-sage-200 focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition" />
                                         </div>
                                     </div>
@@ -262,6 +271,7 @@ const props = defineProps({
     tasks: Object,
     projects: Array,
     managed_projects: { type: Array, default: () => [] },
+    developers: { type: Array, default: () => [] },
     filters: Object,
     is_pm: Boolean,
 })
@@ -293,14 +303,22 @@ const createForm = useForm({
     due_date:    '',
 })
 
-const selectedProjectMembers = computed(() => {
-    if (!createForm.project_id) return []
-    const project = props.managed_projects.find(p => p.id === createForm.project_id)
-    return project?.members ?? []
+const selectedSpecialization = ref('')
+
+const specializations = [
+    { value: 'backend',  label: 'Backend' },
+    { value: 'frontend', label: 'Frontend' },
+    { value: 'ui/ux',    label: 'UI/UX' },
+]
+
+const filteredDevelopers = computed(() => {
+    if (!selectedSpecialization.value) return []
+    return props.developers.filter(d => d.specialization === selectedSpecialization.value)
 })
 
 const closeModal = () => {
     showCreateModal.value = false
+    selectedSpecialization.value = ''
     createForm.reset()
     createForm.clearErrors()
 }

@@ -32,11 +32,12 @@ class TaskPolicy
         return $this->isInvolved($user, $task);
     }
 
-    // Hanya developer yang di-assign; tidak bisa saat done atau review
+    // Hanya developer yang di-assign; tidak bisa saat done atau review; project harus sudah dimulai
     public function updateStatus(User $user, Task $task): bool
     {
         if ($task->status === 'done') return false;
         if ($task->status === 'review') return false;
+        if ($task->project->status === 'planning') return false;
 
         return $task->assigned_to === $user->id;
     }

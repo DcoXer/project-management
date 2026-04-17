@@ -18,15 +18,6 @@ class ProjectForm
                     ->required(),
                 Textarea::make('description')
                     ->columnSpanFull(),
-                Select::make('status')
-                    ->options([
-                        'planning' => 'Planning',
-                        'in_progress' => 'In progress',
-                        'on_hold' => 'On hold',
-                        'completed' => 'Completed',
-                    ])
-                    ->default('planning')
-                    ->required(),
                 Select::make('priority')
                     ->options(['low' => 'Low', 'medium' => 'Medium', 'high' => 'High'])
                     ->default('medium')
@@ -34,8 +25,8 @@ class ProjectForm
                 DatePicker::make('start_date'),
                 DatePicker::make('end_date'),
                 Select::make('created_by')
-                    ->label('Created By')
-                    ->relationship('creator', 'name')
+                    ->label('Project Manager')
+                    ->relationship('creator', 'name', fn ($query) => $query->where('role', 'project_manager'))
                     ->required(),
             ]);
     }

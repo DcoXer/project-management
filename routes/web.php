@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::get('/projects/{project}/export-pdf', [ProjectController::class, 'exportPdf'])->name('projects.exportPdf');
+    Route::post('/projects/{project}/start', [ProjectController::class, 'start'])->name('projects.start');
 
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');

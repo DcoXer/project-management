@@ -23,6 +23,10 @@ class UserForm
                     ->options(['admin' => 'Admin', 'project_manager' => 'Project manager', 'developer' => 'Developer'])
                     ->default('developer')
                     ->required(),
+                Select::make('specialization')
+                    ->options(['backend' => 'Backend', 'frontend' => 'Frontend', 'ui/ux' => 'UI/UX'])
+                    ->placeholder('Pilih specialization...')
+                    ->visible(fn ($get) => $get('role') === 'developer'),
                 TextInput::make('avatar'),
                 TextInput::make('phone')
                     ->tel(),

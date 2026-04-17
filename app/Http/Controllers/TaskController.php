@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateTaskStatusRequest;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use App\Services\TaskService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
@@ -39,13 +40,15 @@ class TaskController extends Controller
             $managedProjects = Project::whereHas('members', fn ($q) => $q
                 ->where('user_id', $user->id)
                 ->where('project_members.role', 'manager')
-            )->with(['members' => fn ($q) => $q->select('users.id', 'users.name')])->orderBy('name')->get(['id', 'name']);
+            )->orderBy('name')->get(['id', 'name']);
         } else {
-            // Developer: hanya task yang di-assign ke user
+            // Developer: hanya task dari project yang sudah dimulai (bukan planning)
             $query = Task::with(['project', 'assignee'])
-                ->where('assigned_to', $user->id);
+                ->where('assigned_to', $user->id)
+                ->whereHas('project', fn ($q) => $q->where('status', '!=', 'planning'));
 
             $projects = Project::whereHas('tasks', fn ($q) => $q->where('assigned_to', $user->id))
+                ->where('status', '!=', 'planning')
                 ->orderBy('name')->get(['id', 'name']);
         }
 
@@ -67,6 +70,7 @@ class TaskController extends Controller
             'tasks'           => $tasks,
             'projects'        => $projects,
             'managed_projects'=> $managedProjects ?? [],
+            'developers'      => $isPm ? User::where('role', 'developer')->orderBy('name')->get(['id', 'name', 'specialization']) : [],
             'filters'         => $request->only(['status', 'priority', 'project_id']),
             'is_pm'           => $isPm,
         ]);
@@ -77,11 +81,11 @@ class TaskController extends Controller
         $this->authorize('create', Task::class);
 
         $validated = $request->validate([
-            'project_id'  => ['required', 'exists:projects,id'],
-            'assigned_to' => ['required', 'exists:users,id'],
-            'title'       => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:5000'],
-            'priority'    => ['required', 'in:low,medium,high'],
+            'project_id'     => ['required', 'exists:projects,id'],
+            'assigned_to'    => ['required', 'exists:users,id'],
+            'title'          => ['required', 'string', 'max:255'],
+            'description'    => ['nullable', 'string', 'max:5000'],
+            'priority'       => ['required', 'in:low,medium,high'],
             'due_date'    => ['nullable', 'date'],
         ], [
             'project_id.required'  => 'Project wajib dipilih.',
@@ -96,6 +100,17 @@ class TaskController extends Controller
             'created_by' => $request->user()->id,
         ]);
 
+        $project   = Project::find($validated['project_id']);
+        $developer = User::find($validated['assigned_to']);
+        $pivotData = ['role' => 'developer', 'specialization' => $developer->specialization];
+
+        $alreadyMember = $project->members()->where('user_id', $developer->id)->exists();
+        if ($alreadyMember) {
+            $project->members()->updateExistingPivot($developer->id, $pivotData);
+        } else {
+            $project->members()->attach($developer->id, $pivotData);
+        }
+
         return redirect()->route('tasks.show', $task)->with('success', 'Task berhasil dibuat.');
     }
 
@@ -106,6 +121,10 @@ class TaskController extends Controller
         $task->load(['project', 'assignee', 'creator', 'comments.user', 'activities.user']);
 
         $user = $request->user();
+
+        if ($user->role === 'developer' && $task->project->status === 'planning') {
+            abort(403, 'Project belum dimulai oleh Project Manager.');
+        }
 
         return Inertia::render('Tasks/Show', [
             'task'        => $task,
@@ -135,12 +154,13 @@ class TaskController extends Controller
             )->orderBy('name')->get(['id', 'name']);
         } else {
             $query = Task::with(['project', 'assignee'])
-                ->where('assigned_to', $user->id);
+                ->where('assigned_to', $user->id)
+                ->whereHas('project', fn ($q) => $q->where('status', '!=', 'planning'));
 
             $projects = Project::where(fn ($q) => $q
                 ->where('created_by', $user->id)
                 ->orWhereHas('members', fn ($m) => $m->where('user_id', $user->id))
-            )->orderBy('name')->get(['id', 'name']);
+            )->where('status', '!=', 'planning')->orderBy('name')->get(['id', 'name']);
         }
 
         if ($request->filled('project_id')) {

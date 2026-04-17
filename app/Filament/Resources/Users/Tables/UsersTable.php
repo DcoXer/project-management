@@ -21,6 +21,8 @@ class UsersTable
                     ->searchable(),
                 TextColumn::make('role')
                     ->badge(),
+                TextColumn::make('specialization')
+                    ->badge(),
                 TextColumn::make('avatar')
                     ->searchable(),
                 TextColumn::make('phone')

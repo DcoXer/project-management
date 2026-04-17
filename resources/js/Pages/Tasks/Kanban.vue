@@ -103,6 +103,10 @@
                                     class="shrink-0 text-violet-500 dark:text-violet-400">
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </span>
+                                <span v-else-if="col.key === 'todo' && task.project?.status === 'planning'" title="Menunggu PM memulai project"
+                                    class="shrink-0 text-amber-400 dark:text-amber-500">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" /></svg>
+                                </span>
                                 <span v-else-if="!isDraggable(task, col.key)" title="Buka detail task untuk mengubah status"
                                     class="shrink-0 text-ink-300 dark:text-sage-600">
                                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" /></svg>
@@ -136,6 +140,11 @@
                                 class="text-[10px] text-ink-300 dark:text-sage-600 mt-2 flex items-center gap-1">
                                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" /></svg>
                                 Drag ke In Progress
+                            </p>
+                            <p v-else-if="col.key === 'todo' && task.project?.status === 'planning' && task.assigned_to === authUser.id"
+                                class="text-[10px] text-amber-500 dark:text-amber-400 mt-2 flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                Menunggu PM memulai project
                             </p>
                         </div>
                     </div>
@@ -182,7 +191,11 @@ const selectedProject = ref(props.filters?.project_id ?? '')
 const { success: toastSuccess, error: toastError } = useToast()
 
 // Hanya task Todo milik user sendiri (sebagai assignee) yang bisa di-drag ke In Progress
-const isDraggable = (task, colKey) => colKey === 'todo' && task.assigned_to === authUser.id
+// dan project harus sudah dimulai (bukan planning)
+const isDraggable = (task, colKey) =>
+    colKey === 'todo' &&
+    task.assigned_to === authUser.id &&
+    task.project?.status !== 'planning'
 
 const onDragStart = (task, colKey) => {
     dragging.value    = task
@@ -220,9 +233,7 @@ const onDrop = async (toCol) => {
     localColumns[toCol].unshift({ ...task, status: toCol })
 
     try {
-        await axios.patch(`/tasks/${task.id}/status`, { status: toCol }, {
-            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-        })
+        await axios.patch(`/tasks/${task.id}/status`, { status: toCol })
         toastSuccess('Task dimulai, status berubah ke In Progress.')
     } catch (err) {
         // Rollback on error

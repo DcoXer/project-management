@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
@@ -24,6 +25,10 @@ class ProjectController extends Controller
                 ->where('created_by', $user->id)
                 ->orWhereHas('members', fn ($m) => $m->where('user_id', $user->id))
             );
+
+        if ($user->role === 'developer') {
+            $query->where('status', '!=', 'planning');
+        }
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -56,15 +61,47 @@ class ProjectController extends Controller
             abort(403, 'Kamu bukan anggota project ini.');
         }
 
+        if ($user->role === 'developer' && $project->status === 'planning') {
+            abort(403, 'Project belum dimulai oleh Project Manager.');
+        }
+
         $project->loadCount([
             'tasks',
             'tasks as tasks_done_count' => fn ($q) => $q->where('status', 'done'),
         ]);
         $project->load(['creator', 'members', 'tasks.assignee']);
 
+        $isPm = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivot('role', 'manager')
+            ->exists();
+
         return Inertia::render('Projects/Show', [
             'project' => $project,
+            'is_pm'   => $isPm,
         ]);
+    }
+
+    public function start(Request $request, Project $project): RedirectResponse
+    {
+        $user = $request->user();
+
+        $isPm = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivot('role', 'manager')
+            ->exists();
+
+        if (! $isPm) {
+            abort(403, 'Hanya Project Manager yang bisa memulai project.');
+        }
+
+        if ($project->status !== 'planning') {
+            return back()->with('error', 'Project hanya bisa dimulai dari status Planning.');
+        }
+
+        $project->update(['status' => 'in_progress']);
+
+        return back()->with('success', 'Project berhasil dimulai.');
     }
 
     public function exportPdf(Request $request, Project $project): HttpResponse

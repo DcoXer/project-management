@@ -13,18 +13,8 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    // Spesialisasi yang tersedia
-    const SPECIALIZATIONS = [
-        'frontend',
-        'backend',
-        'ui_ux',
-        'qa',
-        'devops',
-        'mobile',
-        'pentesting',
-    ];
+    const SPECIALIZATIONS = ['backend', 'frontend', 'ui/ux'];
 
-    // Nama project IT yang realistis
     const PROJECT_NAMES = [
         'Pengembangan Platform E-Commerce',
         'Aplikasi Mobile Banking',
@@ -35,23 +25,12 @@ class DatabaseSeeder extends Seeder
         'Sistem Monitoring Infrastruktur',
         'Aplikasi HR & Payroll Internal',
         'Platform Belajar Online (LMS)',
-        'Security Audit & Pentesting System',
         'Migrasi Database ke Cloud',
         'Chatbot Customer Service',
+        'Sistem Absensi & Penggajian',
     ];
 
-    // Task yang realistis per spesialisasi
     const TASKS_BY_SPEC = [
-        'frontend' => [
-            'Implementasi halaman login & register',
-            'Integrasi komponen reusable dengan Vue',
-            'Optimasi performa rendering halaman',
-            'Implementasi dark mode',
-            'Buat halaman dashboard utama',
-            'Responsive layout untuk mobile',
-            'Integrasi dengan REST API backend',
-            'Implementasi form validasi client-side',
-        ],
         'backend' => [
             'Desain skema database relasional',
             'Buat endpoint REST API autentikasi',
@@ -61,8 +40,22 @@ class DatabaseSeeder extends Seeder
             'Setup queue & job processing',
             'Implementasi caching dengan Redis',
             'Unit testing modul core bisnis',
+            'Buat endpoint notifikasi real-time',
+            'Implementasi fitur export laporan PDF',
         ],
-        'ui_ux' => [
+        'frontend' => [
+            'Implementasi halaman login & register',
+            'Integrasi komponen reusable dengan Vue',
+            'Optimasi performa rendering halaman',
+            'Implementasi dark mode',
+            'Buat halaman dashboard utama',
+            'Responsive layout untuk mobile',
+            'Integrasi dengan REST API backend',
+            'Implementasi form validasi client-side',
+            'Buat komponen tabel dengan pagination',
+            'Animasi transisi halaman',
+        ],
+        'ui/ux' => [
             'Riset user persona dan user journey',
             'Buat wireframe halaman utama',
             'Desain high-fidelity mockup dashboard',
@@ -70,55 +63,22 @@ class DatabaseSeeder extends Seeder
             'Buat design system & komponen library',
             'Presentasi desain ke stakeholder',
             'Finalisasi prototype interaktif',
-        ],
-        'qa' => [
-            'Buat test plan & test case',
-            'Regression testing fitur login',
-            'Performance testing load balancing',
-            'Bug report & dokumentasi issue',
-            'Automation testing dengan Selenium',
-            'UAT (User Acceptance Testing)',
-            'API testing dengan Postman',
-        ],
-        'devops' => [
-            'Setup CI/CD pipeline dengan GitHub Actions',
-            'Konfigurasi Docker container',
-            'Deploy ke staging environment',
-            'Monitoring server dengan Grafana',
-            'Backup database otomatis',
-            'Setup SSL & konfigurasi Nginx',
-            'Optimasi konfigurasi cloud server',
-        ],
-        'mobile' => [
-            'Setup project React Native / Flutter',
-            'Implementasi push notification',
-            'Integrasi API backend ke mobile',
-            'Implementasi offline mode',
-            'UI screen onboarding aplikasi',
-            'Testing di berbagai ukuran device',
-            'Submit ke Google Play Store',
-        ],
-        'pentesting' => [
-            'Vulnerability assessment aplikasi web',
-            'SQL injection & XSS penetration test',
-            'Analisis keamanan autentikasi',
-            'Laporan temuan kerentanan keamanan',
-            'Test OWASP Top 10 vulnerabilities',
-            'Social engineering simulation',
-            'Remediation & patch verification',
+            'Audit aksesibilitas UI (WCAG)',
+            'Desain onboarding flow pengguna baru',
+            'Review konsistensi visual seluruh halaman',
         ],
     ];
 
     public function run(): void
     {
-        // ─── ADMIN ───────────────────────────────────────────────
+        // ─── ADMIN ────────────────────────────────────────────────────────
         $admin = User::factory()->admin()->create([
             'name'     => 'Super Admin',
             'email'    => 'admin@admin.com',
             'password' => Hash::make('password'),
         ]);
 
-        // ─── PROJECT MANAGERS (dengan kredensial jelas) ──────────
+        // ─── PROJECT MANAGERS ─────────────────────────────────────────────
         $managers = collect([
             User::factory()->projectManager()->create([
                 'name'     => 'Budi Santoso',
@@ -137,105 +97,104 @@ class DatabaseSeeder extends Seeder
             ]),
         ]);
 
-        // ─── DEVELOPERS (dengan spesialisasi beragam) ────────────
+        // ─── DEVELOPERS (specialization: backend, frontend, ui/ux) ────────
         $devData = [
-            ['name' => 'Rizky Pratama',   'email' => 'rizky@dev.com',   'spec' => 'frontend'],
-            ['name' => 'Dewi Anggraini',  'email' => 'dewi@dev.com',    'spec' => 'frontend'],
+            // Backend
             ['name' => 'Hendra Wijaya',   'email' => 'hendra@dev.com',  'spec' => 'backend'],
             ['name' => 'Mega Kusuma',     'email' => 'mega@dev.com',    'spec' => 'backend'],
             ['name' => 'Fajar Nugroho',   'email' => 'fajar@dev.com',   'spec' => 'backend'],
-            ['name' => 'Nadia Putri',     'email' => 'nadia@dev.com',   'spec' => 'ui_ux'],
-            ['name' => 'Kevin Salim',     'email' => 'kevin@dev.com',   'spec' => 'mobile'],
-            ['name' => 'Laras Wulandari', 'email' => 'laras@dev.com',   'spec' => 'qa'],
-            ['name' => 'Dimas Prasetyo',  'email' => 'dimas@dev.com',   'spec' => 'devops'],
-            ['name' => 'Citra Lestari',   'email' => 'citra@dev.com',   'spec' => 'pentesting'],
+            // Frontend
+            ['name' => 'Rizky Pratama',   'email' => 'rizky@dev.com',   'spec' => 'frontend'],
+            ['name' => 'Dewi Anggraini',  'email' => 'dewi@dev.com',    'spec' => 'frontend'],
             ['name' => 'Andi Firmansyah', 'email' => 'andi@dev.com',    'spec' => 'frontend'],
-            ['name' => 'Putri Handayani', 'email' => 'putri@dev.com',   'spec' => 'qa'],
+            // UI/UX
+            ['name' => 'Nadia Putri',     'email' => 'nadia@dev.com',   'spec' => 'ui/ux'],
+            ['name' => 'Citra Lestari',   'email' => 'citra@dev.com',   'spec' => 'ui/ux'],
         ];
 
         $developers = collect();
         foreach ($devData as $d) {
             $developers->push(
-                User::factory()->create([
+                User::factory()->developer($d['spec'])->create([
                     'name'     => $d['name'],
                     'email'    => $d['email'],
                     'password' => Hash::make('password'),
-                    'role'     => 'developer',
                 ])
             );
         }
 
-        // ─── PROJECTS ────────────────────────────────────────────
+        // ─── PROJECTS & TASKS ─────────────────────────────────────────────
+        // Flow: Admin buat project → set created_by ke PM → PM auto jadi member
+        // PM buat tasks → assign developer → developer auto jadi member
+
         $projectNames = collect(self::PROJECT_NAMES)->shuffle();
         $nameIndex    = 0;
 
         foreach ($managers as $manager) {
-            // Tiap manager punya 2 project
+            // Tiap manager dapat 2 project dari admin
             for ($p = 0; $p < 2; $p++) {
                 $project = Project::factory()->create([
-                    'name'       => $projectNames[$nameIndex++] ?? fake()->sentence(3, false),
-                    'created_by' => $manager->id,
+                    'name'       => $projectNames[$nameIndex++] ?? fake()->words(3, true),
+                    'created_by' => $manager->id, // Admin set PM sebagai creator
                 ]);
 
-                // Tambah manager sebagai member (role: manager)
+                // PM otomatis jadi member dengan role manager (simulasi afterCreate hook)
                 $project->members()->attach($manager->id, [
                     'role'           => 'manager',
                     'specialization' => null,
                 ]);
 
-                // Pilih 3-6 developer untuk project ini
-                $count       = rand(3, 6);
-                $projectDevs = $developers->shuffle()->take($count);
+                // ── PM buat tasks, assign ke developer ────────────────────
+                // Pilih 4-6 developer secara acak untuk project ini
+                $projectDevs = $developers->shuffle()->take(rand(4, 6));
+                $taskCount   = rand(5, 9);
 
-                foreach ($projectDevs as $dev) {
-                    // Cari data spesialisasi default dev ini
-                    $defaultSpec = collect($devData)->firstWhere('email', $dev->email)['spec'] ?? 'backend';
-
-                    $project->members()->syncWithoutDetaching([
-                        $dev->id => [
-                            'role'           => 'developer',
-                            'specialization' => $defaultSpec,
-                        ],
-                    ]);
-                }
-
-                // ─── TASKS ───────────────────────────────────────
-                $taskCount = rand(5, 8);
                 for ($t = 0; $t < $taskCount; $t++) {
                     $assignedDev = $projectDevs->random();
-                    $devSpec     = collect($devData)->firstWhere('email', $assignedDev->email)['spec'] ?? 'backend';
+                    $devSpec     = $assignedDev->specialization;
 
-                    // Ambil task title sesuai spesialisasi dev
-                    $taskTitles = self::TASKS_BY_SPEC[$devSpec] ?? self::TASKS_BY_SPEC['backend'];
+                    $taskTitles = self::TASKS_BY_SPEC[$devSpec];
                     $title      = $taskTitles[array_rand($taskTitles)];
 
+                    // PM buat task
                     Task::factory()->create([
                         'project_id'  => $project->id,
                         'title'       => $title,
                         'assigned_to' => $assignedDev->id,
                         'created_by'  => $manager->id,
                     ]);
+
+                    // Developer otomatis jadi member project (simulasi auto-attach di store())
+                    $alreadyMember = $project->members()->where('user_id', $assignedDev->id)->exists();
+                    if (! $alreadyMember) {
+                        $project->members()->attach($assignedDev->id, [
+                            'role'           => 'developer',
+                            'specialization' => $devSpec,
+                        ]);
+                    }
                 }
             }
         }
 
-        // ─── INFO RINGKASAN ──────────────────────────────────────
+        // ─── RINGKASAN ────────────────────────────────────────────────────
         $this->command->info('');
-        $this->command->info('✓ Seeder selesai! Akun yang tersedia:');
+        $this->command->info('Seeder selesai! Akun yang tersedia:');
         $this->command->info('');
         $this->command->table(
-            ['Role', 'Email', 'Password'],
+            ['Role', 'Specialization', 'Email', 'Password'],
             [
-                ['Admin',           'admin@admin.com', 'password'],
-                ['Project Manager', 'budi@pm.com',     'password'],
-                ['Project Manager', 'siti@pm.com',     'password'],
-                ['Project Manager', 'ahmad@pm.com',    'password'],
-                ['Developer (FE)',   'rizky@dev.com',   'password'],
-                ['Developer (BE)',   'hendra@dev.com',  'password'],
-                ['Developer (QA)',   'laras@dev.com',   'password'],
-                ['Developer (DevOps)', 'dimas@dev.com', 'password'],
-                ['Developer (Pentest)', 'citra@dev.com','password'],
-                ['... dst', '(nama)@dev.com', 'password'],
+                ['Admin',           '-',        'admin@admin.com', 'password'],
+                ['Project Manager', '-',        'budi@pm.com',     'password'],
+                ['Project Manager', '-',        'siti@pm.com',     'password'],
+                ['Project Manager', '-',        'ahmad@pm.com',    'password'],
+                ['Developer',       'Backend',  'hendra@dev.com',  'password'],
+                ['Developer',       'Backend',  'mega@dev.com',    'password'],
+                ['Developer',       'Backend',  'fajar@dev.com',   'password'],
+                ['Developer',       'Frontend', 'rizky@dev.com',   'password'],
+                ['Developer',       'Frontend', 'dewi@dev.com',    'password'],
+                ['Developer',       'Frontend', 'andi@dev.com',    'password'],
+                ['Developer',       'UI/UX',    'nadia@dev.com',   'password'],
+                ['Developer',       'UI/UX',    'citra@dev.com',   'password'],
             ]
         );
         $this->command->info('');

@@ -49,6 +49,14 @@ class UserFactory extends Factory
         ]);
     }
 
+    public function developer(string $specialization): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role'           => 'developer',
+            'specialization' => $specialization,
+        ]);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */
