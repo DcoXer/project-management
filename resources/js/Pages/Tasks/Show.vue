@@ -3,22 +3,22 @@
 
         <!-- ── Page header ─────────────────────────────────────────── -->
         <div class="mb-7">
-            <Link href="/tasks" class="inline-flex items-center gap-1.5 text-xs font-medium text-ink-400 dark:text-sage-600 hover:text-ink-700 dark:hover:text-sage-300 transition mb-4">
+            <Link href="/tasks" class="inline-flex items-center gap-1.5 text-xs font-medium text-ink-400 dark:text-white hover:text-ink-700 dark:hover:text-white transition mb-4">
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                 Kembali ke Tasks
             </Link>
 
             <div class="flex flex-wrap items-start justify-between gap-4">
                 <div class="min-w-0">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-ink-900 dark:text-sage-100 tracking-tight leading-tight">{{ task.title }}</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-ink-900 dark:text-white tracking-tight leading-tight">{{ task.title }}</h1>
                     <div class="flex flex-wrap items-center gap-2 mt-3">
                         <TaskStatusBadge :status="task.status" />
                         <PriorityBadge :priority="task.priority" />
-                        <span class="text-ink-300 dark:text-sage-700 text-xs">·</span>
-                        <Link :href="`/projects/${task.project.id}`" class="text-xs text-ink-400 dark:text-sage-500 hover:text-ink-700 dark:hover:text-sage-300 transition font-medium">{{ task.project.name }}</Link>
+                        <span class="text-ink-300 dark:text-white text-xs">·</span>
+                        <Link :href="`/projects/${task.project.id}`" class="text-xs text-ink-400 dark:text-white hover:text-ink-700 dark:hover:text-white transition font-medium">{{ task.project.name }}</Link>
                         <template v-if="task.due_date">
-                            <span class="text-ink-300 dark:text-sage-700 text-xs">·</span>
-                            <span class="text-xs text-ink-400 dark:text-sage-500">Due {{ formatDate(task.due_date) }}</span>
+                            <span class="text-ink-300 dark:text-white text-xs">·</span>
+                            <span class="text-xs text-ink-400 dark:text-white">Due {{ formatDate(task.due_date) }}</span>
                         </template>
                     </div>
                 </div>
@@ -55,15 +55,15 @@
 
                 <!-- Description -->
                 <div class="bg-white dark:bg-ink-900 rounded-2xl border border-ink-900/6 dark:border-white/5 p-6">
-                    <h2 class="text-xs font-semibold text-ink-400 dark:text-sage-600 uppercase tracking-widest mb-3">Deskripsi</h2>
-                    <p v-if="task.description" class="text-sm text-ink-600 dark:text-sage-400 leading-relaxed whitespace-pre-wrap">{{ task.description }}</p>
-                    <p v-else class="text-sm text-ink-300 dark:text-sage-700 italic">Tidak ada deskripsi.</p>
+                    <h2 class="text-xs font-semibold text-ink-400 dark:text-white uppercase tracking-widest mb-3">Deskripsi</h2>
+                    <p v-if="task.description" class="text-sm text-ink-600 dark:text-white leading-relaxed whitespace-pre-wrap">{{ task.description }}</p>
+                    <p v-else class="text-sm text-ink-300 dark:text-white italic">Tidak ada deskripsi.</p>
                 </div>
 
                 <!-- Bukti Pekerjaan (tampil kalau ada) -->
                 <div v-if="task.proof || task.proof_file" class="bg-white dark:bg-ink-900 rounded-2xl border border-violet-200 dark:border-violet-400/15 p-6">
                     <h2 class="text-xs font-semibold text-violet-500 dark:text-violet-400 uppercase tracking-widest mb-3">Bukti Pekerjaan</h2>
-                    <p v-if="task.proof" class="text-sm text-ink-600 dark:text-sage-400 whitespace-pre-wrap leading-relaxed">{{ task.proof }}</p>
+                    <p v-if="task.proof" class="text-sm text-ink-600 dark:text-white whitespace-pre-wrap leading-relaxed">{{ task.proof }}</p>
                     <a v-if="task.proof_file" :href="`/storage/${task.proof_file}`" target="_blank" rel="noopener noreferrer"
                         class="inline-flex items-center gap-1.5 text-xs font-medium text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-400/10 hover:bg-violet-100 dark:hover:bg-violet-400/20 px-3 py-1.5 rounded-lg transition mt-2">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
@@ -74,25 +74,25 @@
                 <!-- Comments -->
                 <div class="bg-white dark:bg-ink-900 rounded-2xl border border-ink-900/6 dark:border-white/5 overflow-hidden">
                     <div class="px-6 py-4 border-b border-ink-50 dark:border-white/4">
-                        <h2 class="text-xs font-semibold text-ink-400 dark:text-sage-600 uppercase tracking-widest">Komentar</h2>
+                        <h2 class="text-xs font-semibold text-ink-400 dark:text-white uppercase tracking-widest">Komentar</h2>
                     </div>
 
                     <!-- Comment list -->
                     <div class="divide-y divide-ink-50 dark:divide-white/4">
-                        <div v-if="!task.comments?.length" class="px-6 py-8 text-center text-sm text-ink-300 dark:text-sage-700">Belum ada komentar.</div>
+                        <div v-if="!task.comments?.length" class="px-6 py-8 text-center text-sm text-ink-300 dark:text-white">Belum ada komentar.</div>
                         <div v-for="comment in task.comments" :key="comment.id" class="px-6 py-4 flex items-start gap-3.5 group">
-                            <UserAvatar :name="comment.user.name" class="bg-ink-100 dark:bg-ink-800 text-ink-500 dark:text-sage-400 mt-0.5" />
+                            <UserAvatar :name="comment.user.name" class="bg-ink-100 dark:bg-ink-800 text-ink-500 dark:text-white mt-0.5" />
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-baseline justify-between gap-2">
-                                    <span class="text-sm font-semibold text-ink-800 dark:text-sage-200">{{ comment.user.name }}</span>
-                                    <span class="text-[11px] text-ink-300 dark:text-sage-700 shrink-0">{{ formatDateTime(comment.created_at) }}</span>
+                                    <span class="text-sm font-semibold text-ink-800 dark:text-white">{{ comment.user.name }}</span>
+                                    <span class="text-[11px] text-ink-300 dark:text-white shrink-0">{{ formatDateTime(comment.created_at) }}</span>
                                 </div>
-                                <p class="text-sm text-ink-600 dark:text-sage-400 mt-1 leading-relaxed">{{ comment.body }}</p>
+                                <p class="text-sm text-ink-600 dark:text-white mt-1 leading-relaxed">{{ comment.body }}</p>
                             </div>
                             <button
                                 v-if="comment.user.id === $page.props.auth.user.id || $page.props.auth.user.role === 'admin'"
                                 @click="deleteComment(comment.id)"
-                                class="text-[11px] text-ink-200 dark:text-sage-700 hover:text-red-400 dark:hover:text-red-400 transition opacity-0 group-hover:opacity-100 shrink-0 mt-1">
+                                class="text-[11px] text-ink-200 dark:text-white hover:text-red-400 dark:hover:text-red-400 transition opacity-0 group-hover:opacity-100 shrink-0 mt-1">
                                 hapus
                             </button>
                         </div>
@@ -100,7 +100,7 @@
 
                     <!-- Comment form -->
                     <div class="px-6 py-4 bg-ink-50/50 dark:bg-white/2 border-t border-ink-50 dark:border-white/4">
-                        <div v-if="task.status === 'done'" class="flex items-center gap-2 text-sm text-ink-400 dark:text-sage-600">
+                        <div v-if="task.status === 'done'" class="flex items-center gap-2 text-sm text-ink-400 dark:text-white">
                             <svg class="w-4 h-4 shrink-0 text-emerald-500 dark:text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
                                 <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
                             </svg>
@@ -110,7 +110,7 @@
                             <form @submit.prevent="submitComment" class="flex items-end gap-3">
                                 <textarea
                                     v-model="commentForm.body" rows="2" placeholder="Tulis komentar..."
-                                    class="flex-1 bg-white dark:bg-ink-800 border border-ink-200 dark:border-white/8 rounded-xl px-3.5 py-2.5 text-sm text-ink-900 dark:text-sage-200 placeholder-ink-300 dark:placeholder-ink-600 focus:outline-none focus:ring-2 focus:ring-ink-900/10 dark:focus:ring-sage-300/15 resize-none transition"
+                                    class="flex-1 bg-white dark:bg-ink-800 border border-ink-200 dark:border-white/8 rounded-xl px-3.5 py-2.5 text-sm text-ink-900 dark:text-white placeholder-ink-300 dark:placeholder-ink-600 focus:outline-none focus:ring-2 focus:ring-ink-900/10 dark:focus:ring-sage-300/15 resize-none transition"
                                     :class="{ 'border-red-400': commentForm.errors.body }"
                                 ></textarea>
                                 <button type="submit" :disabled="commentForm.processing || !commentForm.body.trim()"
@@ -130,7 +130,7 @@
 
                 <!-- Status Action Panel -->
                 <div v-if="is_assignee || is_pm" class="bg-white dark:bg-ink-900 rounded-2xl border border-ink-900/6 dark:border-white/5 p-5">
-                    <h2 class="text-xs font-semibold text-ink-400 dark:text-sage-600 uppercase tracking-widest mb-4">Status Task</h2>
+                    <h2 class="text-xs font-semibold text-ink-400 dark:text-white uppercase tracking-widest mb-4">Status Task</h2>
 
                     <!-- DONE -->
                     <div v-if="task.status === 'done'" class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
@@ -141,13 +141,13 @@
                     <!-- PM: approve/reject saat review -->
                     <template v-else-if="is_pm">
                         <div v-if="task.status === 'review'" class="space-y-4">
-                            <p class="text-sm text-ink-500 dark:text-sage-500">Developer mengajukan review. Periksa bukti lalu setujui atau tolak.</p>
+                            <p class="text-sm text-ink-500 dark:text-white">Developer mengajukan review. Periksa bukti lalu setujui atau tolak.</p>
 
                             <!-- Bukti inline untuk PM -->
                             <div v-if="task.proof || task.proof_file" class="rounded-xl bg-violet-50 dark:bg-violet-400/8 border border-violet-100 dark:border-violet-400/15 p-3.5 space-y-2">
                                 <p class="text-[11px] font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-wide">Bukti Developer</p>
                                 <template v-if="task.proof">
-                                    <p class="text-sm text-ink-700 dark:text-sage-300 whitespace-pre-wrap leading-relaxed">{{ task.proof }}</p>
+                                    <p class="text-sm text-ink-700 dark:text-white whitespace-pre-wrap leading-relaxed">{{ task.proof }}</p>
                                     <a v-if="isUrl(task.proof)" :href="task.proof" target="_blank" rel="noopener noreferrer"
                                         class="inline-flex items-center gap-1 text-xs text-violet-600 dark:text-violet-400 hover:underline">
                                         <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
@@ -177,14 +177,14 @@
                                 </button>
                             </div>
                         </div>
-                        <p v-else class="text-sm text-ink-400 dark:text-sage-600 italic">Perubahan status adalah tanggung jawab developer.</p>
+                        <p v-else class="text-sm text-ink-400 dark:text-white italic">Perubahan status adalah tanggung jawab developer.</p>
                     </template>
 
                     <!-- Developer actions -->
                     <template v-else-if="is_assignee">
                         <!-- todo → in_progress -->
                         <div v-if="task.status === 'todo'">
-                            <p class="text-sm text-ink-500 dark:text-sage-500 mb-3">Task belum dimulai.</p>
+                            <p class="text-sm text-ink-500 dark:text-white mb-3">Task belum dimulai.</p>
                             <button @click="startTask" :disabled="statusForm.processing"
                                 class="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 hover:bg-ink-700 dark:hover:bg-sage-200 transition disabled:opacity-50">
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347c-.75.412-1.667-.13-1.667-.986V5.653z" /></svg>
@@ -200,7 +200,7 @@
                                 <p class="text-sm text-red-700 dark:text-red-300 leading-relaxed">{{ task.rejection_reason }}</p>
                             </div>
 
-                            <p v-else class="text-sm text-ink-500 dark:text-sage-500">Sudah selesai? Submit ke review.</p>
+                            <p v-else class="text-sm text-ink-500 dark:text-white">Sudah selesai? Submit ke review.</p>
 
                             <div v-if="!showProofForm">
                                 <button @click="showProofForm = true"
@@ -212,21 +212,21 @@
 
                             <div v-else class="space-y-3 bg-violet-50 dark:bg-violet-400/8 rounded-xl p-4 border border-violet-100 dark:border-violet-400/15">
                                 <p class="text-[11px] font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-wide">Bukti Pekerjaan <span class="text-red-400">*</span></p>
-                                <p class="text-xs text-ink-400 dark:text-sage-600">Lampirkan URL / deskripsi hasil, atau upload file. Minimal salah satu.</p>
+                                <p class="text-xs text-ink-400 dark:text-white">Lampirkan URL / deskripsi hasil, atau upload file. Minimal salah satu.</p>
                                 <textarea v-model="proofForm.proof" rows="3"
                                     placeholder="https://github.com/... atau deskripsi singkat hasil kerja"
-                                    class="w-full bg-white dark:bg-ink-800 border border-ink-200 dark:border-white/8 rounded-xl px-3 py-2 text-sm text-ink-900 dark:text-sage-200 placeholder-ink-300 dark:placeholder-ink-600 focus:outline-none focus:ring-2 focus:ring-violet-500/20 resize-none transition"
+                                    class="w-full bg-white dark:bg-ink-800 border border-ink-200 dark:border-white/8 rounded-xl px-3 py-2 text-sm text-ink-900 dark:text-white placeholder-ink-300 dark:placeholder-ink-600 focus:outline-none focus:ring-2 focus:ring-violet-500/20 resize-none transition"
                                     :class="{ 'border-red-400': proofForm.errors.proof }"
                                 ></textarea>
                                 <!-- File upload -->
                                 <div>
-                                    <p class="text-[11px] text-ink-400 dark:text-sage-600 mb-1">Upload file (opsional)</p>
+                                    <p class="text-[11px] text-ink-400 dark:text-white mb-1">Upload file (opsional)</p>
                                     <input ref="proofFileInput" type="file"
                                         accept=".jpg,.jpeg,.png,.gif,.pdf,.zip"
                                         @change="proofForm.proof_file = $event.target.files[0]"
-                                        class="block w-full text-xs text-ink-500 dark:text-sage-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-violet-100 file:text-violet-700 dark:file:bg-violet-400/15 dark:file:text-violet-300 hover:file:bg-violet-200 cursor-pointer"
+                                        class="block w-full text-xs text-ink-500 dark:text-white file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-violet-100 file:text-violet-700 dark:file:bg-violet-400/15 dark:file:text-violet-300 hover:file:bg-violet-200 cursor-pointer"
                                     />
-                                    <p class="text-[11px] text-ink-300 dark:text-sage-700 mt-1">JPG, PNG, PDF, ZIP · maks 10MB</p>
+                                    <p class="text-[11px] text-ink-300 dark:text-white mt-1">JPG, PNG, PDF, ZIP · maks 10MB</p>
                                 </div>
                                 <p v-if="proofForm.errors.proof" class="text-xs text-red-500">{{ proofForm.errors.proof }}</p>
                                 <p v-if="proofForm.errors.proof_file" class="text-xs text-red-500">{{ proofForm.errors.proof_file }}</p>
@@ -236,7 +236,7 @@
                                         Kirim Review
                                     </button>
                                     <button @click="cancelProofForm"
-                                        class="px-3 py-2 rounded-xl text-sm text-ink-500 dark:text-sage-500 hover:bg-ink-100 dark:hover:bg-white/5 transition">
+                                        class="px-3 py-2 rounded-xl text-sm text-ink-500 dark:text-white hover:bg-ink-100 dark:hover:bg-white/5 transition">
                                         Batal
                                     </button>
                                 </div>
@@ -253,36 +253,36 @@
 
                 <!-- Task Meta -->
                 <div class="bg-white dark:bg-ink-900 rounded-2xl border border-ink-900/6 dark:border-white/5 p-5">
-                    <h2 class="text-xs font-semibold text-ink-400 dark:text-sage-600 uppercase tracking-widest mb-4">Detail</h2>
+                    <h2 class="text-xs font-semibold text-ink-400 dark:text-white uppercase tracking-widest mb-4">Detail</h2>
                     <div class="space-y-3 text-sm">
                         <div class="flex items-center justify-between">
-                            <span class="text-ink-400 dark:text-sage-600">Assignee</span>
-                            <span class="font-medium text-ink-800 dark:text-sage-200">{{ task.assignee?.name ?? '—' }}</span>
+                            <span class="text-ink-400 dark:text-white">Assignee</span>
+                            <span class="font-medium text-ink-800 dark:text-white">{{ task.assignee?.name ?? '—' }}</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-ink-400 dark:text-sage-600">Creator</span>
-                            <span class="text-ink-700 dark:text-sage-300">{{ task.creator?.name ?? '—' }}</span>
+                            <span class="text-ink-400 dark:text-white">Creator</span>
+                            <span class="text-ink-700 dark:text-white">{{ task.creator?.name ?? '—' }}</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-ink-400 dark:text-sage-600">Due Date</span>
-                            <span class="text-ink-700 dark:text-sage-300">{{ task.due_date ? formatDate(task.due_date) : '—' }}</span>
+                            <span class="text-ink-400 dark:text-white">Due Date</span>
+                            <span class="text-ink-700 dark:text-white">{{ task.due_date ? formatDate(task.due_date) : '—' }}</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-ink-400 dark:text-sage-600">Project</span>
-                            <Link :href="`/projects/${task.project.id}`" class="text-sage-600 dark:text-sage-400 hover:underline font-medium truncate max-w-[140px]">{{ task.project.name }}</Link>
+                            <span class="text-ink-400 dark:text-white">Project</span>
+                            <Link :href="`/projects/${task.project.id}`" class="text-sage-600 dark:text-white hover:underline font-medium truncate max-w-[140px]">{{ task.project.name }}</Link>
                         </div>
                     </div>
                 </div>
 
                 <!-- Activity -->
                 <div v-if="task.activities?.length" class="bg-white dark:bg-ink-900 rounded-2xl border border-ink-900/6 dark:border-white/5 p-5">
-                    <h2 class="text-xs font-semibold text-ink-400 dark:text-sage-600 uppercase tracking-widest mb-4">Aktivitas</h2>
+                    <h2 class="text-xs font-semibold text-ink-400 dark:text-white uppercase tracking-widest mb-4">Aktivitas</h2>
                     <div class="space-y-3">
                         <div v-for="activity in task.activities" :key="activity.id" class="flex items-start gap-2.5">
-                            <UserAvatar :name="activity.user.name" size="xs" class="bg-ink-100 dark:bg-ink-800 text-ink-400 dark:text-sage-500 mt-0.5" />
+                            <UserAvatar :name="activity.user.name" size="xs" class="bg-ink-100 dark:bg-ink-800 text-ink-400 dark:text-white mt-0.5" />
                             <div>
-                                <p class="text-xs text-ink-600 dark:text-sage-400 leading-snug"><span class="font-semibold text-ink-800 dark:text-sage-300">{{ activity.user.name }}</span> {{ activity.description }}</p>
-                                <p class="text-[11px] text-ink-300 dark:text-sage-700 mt-0.5">{{ formatDateTime(activity.created_at) }}</p>
+                                <p class="text-xs text-ink-600 dark:text-white leading-snug"><span class="font-semibold text-ink-800 dark:text-white">{{ activity.user.name }}</span> {{ activity.description }}</p>
+                                <p class="text-[11px] text-ink-300 dark:text-white mt-0.5">{{ formatDateTime(activity.created_at) }}</p>
                             </div>
                         </div>
                     </div>
@@ -298,21 +298,21 @@
                 <div class="relative bg-white dark:bg-ink-900 rounded-2xl shadow-xl w-full max-w-md border border-ink-900/8 dark:border-white/6 p-6 space-y-4">
                     <div class="flex items-start justify-between gap-3">
                         <div>
-                            <h3 class="text-base font-bold text-ink-900 dark:text-sage-200">Tolak Review</h3>
-                            <p class="text-sm text-ink-500 dark:text-sage-500 mt-0.5">Berikan alasan agar developer bisa memperbaiki pekerjaan.</p>
+                            <h3 class="text-base font-bold text-ink-900 dark:text-white">Tolak Review</h3>
+                            <p class="text-sm text-ink-500 dark:text-white mt-0.5">Berikan alasan agar developer bisa memperbaiki pekerjaan.</p>
                         </div>
-                        <button @click="closeRejectModal" class="text-ink-300 hover:text-ink-600 dark:text-sage-600 dark:hover:text-sage-300 transition mt-0.5">
+                        <button @click="closeRejectModal" class="text-ink-300 hover:text-ink-600 dark:text-white dark:hover:text-white transition mt-0.5">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
                     </div>
                     <textarea v-model="rejectForm.rejection_reason" rows="4"
                         placeholder="Contoh: Implementasi belum sesuai spesifikasi, harap perbaiki validasi form..."
-                        class="w-full bg-ink-50 dark:bg-ink-800 border border-ink-200 dark:border-white/8 rounded-xl px-3.5 py-3 text-sm text-ink-900 dark:text-sage-200 placeholder-ink-300 dark:placeholder-ink-600 focus:outline-none focus:ring-2 focus:ring-red-500/20 resize-none transition"
+                        class="w-full bg-ink-50 dark:bg-ink-800 border border-ink-200 dark:border-white/8 rounded-xl px-3.5 py-3 text-sm text-ink-900 dark:text-white placeholder-ink-300 dark:placeholder-ink-600 focus:outline-none focus:ring-2 focus:ring-red-500/20 resize-none transition"
                         :class="{ 'border-red-400': rejectForm.errors.rejection_reason }"
                     ></textarea>
                     <p v-if="rejectForm.errors.rejection_reason" class="text-xs text-red-500">{{ rejectForm.errors.rejection_reason }}</p>
                     <div class="flex gap-2 justify-end">
-                        <button @click="closeRejectModal" class="px-4 py-2 rounded-xl text-sm font-medium text-ink-500 dark:text-sage-500 hover:bg-ink-100 dark:hover:bg-white/5 transition">Batal</button>
+                        <button @click="closeRejectModal" class="px-4 py-2 rounded-xl text-sm font-medium text-ink-500 dark:text-white hover:bg-ink-100 dark:hover:bg-white/5 transition">Batal</button>
                         <button @click="rejectTask" :disabled="rejectForm.processing || !rejectForm.rejection_reason.trim()"
                             class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-red-500 hover:bg-red-600 text-white transition disabled:opacity-50">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>

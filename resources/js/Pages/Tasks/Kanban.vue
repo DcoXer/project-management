@@ -5,17 +5,17 @@
             <!-- Header -->
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h1 class="text-2xl font-bold text-ink-900 dark:text-sage-200 tracking-tight">Kanban Board</h1>
-                    <p class="text-sm text-ink-500 dark:text-sage-500 mt-1">Visual status task per kolom</p>
+                    <h1 class="text-2xl font-bold text-ink-900 dark:text-white tracking-tight">Kanban Board</h1>
+                    <p class="text-sm text-ink-500 dark:text-white mt-1">Visual status task per kolom</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <select v-model="selectedProject" @change="applyFilter"
-                        class="border border-ink-200 dark:border-ink-600 bg-sage-50 dark:bg-ink-850 text-ink-900 dark:text-sage-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition">
+                        class="border border-ink-200 dark:border-ink-600 bg-sage-50 dark:bg-ink-850 text-ink-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ink-900/15 dark:focus:ring-sage-300/20 transition">
                         <option value="">Semua Project</option>
                         <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option>
                     </select>
                     <Link href="/tasks"
-                        class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-ink-200 dark:border-ink-600 text-ink-600 dark:text-sage-400 hover:bg-ink-100 dark:hover:bg-ink-700 transition">
+                        class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-ink-200 dark:border-ink-600 text-ink-600 dark:text-white hover:bg-ink-100 dark:hover:bg-ink-700 transition">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                         </svg>
@@ -25,10 +25,10 @@
             </div>
 
             <!-- Legend workflow -->
-            <div class="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-ink-400 dark:text-sage-500 px-0.5">
+            <div class="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-ink-400 dark:text-white px-0.5">
                 <span class="flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-sage-500 inline-block"></span>
-                    Developer: drag <strong class="text-ink-600 dark:text-sage-400">Todo → In Progress</strong>
+                    Developer: drag <strong class="text-ink-600 dark:text-white">Todo → In Progress</strong>
                 </span>
                 <span class="flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-violet-500 inline-block"></span>
@@ -50,9 +50,9 @@
                     <div class="flex items-center justify-between px-1">
                         <div class="flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full" :class="col.dot"></span>
-                            <span class="text-sm font-semibold text-ink-700 dark:text-sage-300">{{ col.label }}</span>
+                            <span class="text-sm font-semibold text-ink-700 dark:text-white">{{ col.label }}</span>
                         </div>
-                        <span class="text-xs font-semibold bg-ink-100 dark:bg-ink-700 text-ink-500 dark:text-sage-400 rounded-full px-2 py-0.5">
+                        <span class="text-xs font-semibold bg-ink-100 dark:bg-ink-700 text-ink-500 dark:text-white rounded-full px-2 py-0.5">
                             {{ localColumns[col.key].length }}
                         </span>
                     </div>
@@ -70,7 +70,7 @@
                         <!-- Empty state -->
                         <div v-if="!localColumns[col.key].length"
                             class="flex items-center justify-center h-20 rounded-lg border border-dashed border-ink-200 dark:border-ink-600">
-                            <span class="text-xs text-ink-300 dark:text-sage-600">Tidak ada task</span>
+                            <span class="text-xs text-ink-300 dark:text-white">Tidak ada task</span>
                         </div>
 
                         <!-- Task Cards -->
@@ -91,7 +91,7 @@
                             <!-- Lock badge untuk task yang tidak bisa di-drag -->
                             <div class="flex items-start justify-between gap-2 mb-2">
                                 <Link :href="`/tasks/${task.id}`"
-                                    class="block text-sm font-semibold text-ink-900 dark:text-sage-200 hover:text-sage-700 dark:hover:text-sage-300 leading-snug flex-1"
+                                    class="block text-sm font-semibold text-ink-900 dark:text-white hover:text-sage-700 dark:hover:text-white leading-snug flex-1"
                                     @click.stop>
                                     {{ task.title }}
                                 </Link>
@@ -109,13 +109,13 @@
                                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" /></svg>
                                 </span>
                                 <span v-else-if="!isDraggable(task, col.key)" title="Buka detail task untuk mengubah status"
-                                    class="shrink-0 text-ink-300 dark:text-sage-600">
+                                    class="shrink-0 text-ink-300 dark:text-white">
                                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" /></svg>
                                 </span>
                             </div>
 
                             <!-- Project -->
-                            <p v-if="task.project" class="text-xs text-ink-400 dark:text-sage-500 mb-2.5 flex items-center gap-1">
+                            <p v-if="task.project" class="text-xs text-ink-400 dark:text-white mb-2.5 flex items-center gap-1">
                                 <svg class="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                                 </svg>
@@ -126,7 +126,7 @@
                             <div class="flex items-center justify-between gap-2">
                                 <PriorityBadge :priority="task.priority" sm />
                                 <div class="flex items-center gap-1.5">
-                                    <span v-if="task.due_date" class="text-[11px] text-ink-400 dark:text-sage-500"
+                                    <span v-if="task.due_date" class="text-[11px] text-ink-400 dark:text-white"
                                         :class="{ 'text-red-500 dark:text-red-400 font-medium': isOverdue(task) }">
                                         {{ formatDateShort(task.due_date) }}
                                     </span>
@@ -138,7 +138,7 @@
 
                             <!-- Hint untuk task yang bisa di-drag -->
                             <p v-if="isDraggable(task, col.key)"
-                                class="text-[10px] text-ink-300 dark:text-sage-600 mt-2 flex items-center gap-1">
+                                class="text-[10px] text-ink-300 dark:text-white mt-2 flex items-center gap-1">
                                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" /></svg>
                                 Drag ke In Progress
                             </p>

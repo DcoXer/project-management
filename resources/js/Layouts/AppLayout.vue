@@ -12,7 +12,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                         </svg>
                     </div>
-                    <span class="text-[15px] font-bold text-ink-900 dark:text-sage-200 tracking-tight">Project Management</span>
+                    <span class="text-[15px] font-bold text-ink-900 dark:text-white tracking-tight">Project Management</span>
                 </Link>
             </div>
 
@@ -23,8 +23,8 @@
                     :href="nav.href"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150"
                     :class="$page.url.startsWith(nav.match)
-                        ? 'bg-ink-900 dark:bg-sage-300/15 text-white dark:text-sage-300'
-                        : 'text-ink-400 dark:text-sage-600 hover:bg-ink-50 dark:hover:bg-white/4 hover:text-ink-900 dark:hover:text-sage-200'"
+                        ? 'bg-ink-900 dark:bg-sage-300/15 text-white dark:text-white'
+                        : 'text-ink-400 dark:text-white hover:bg-ink-50 dark:hover:bg-white/4 hover:text-ink-900 dark:hover:text-white'"
                 >
                     <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" :d="nav.icon" />
@@ -48,10 +48,10 @@
                         </span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-ink-900 dark:text-sage-200 truncate leading-none">{{ $page.props.auth.user.name }}</p>
-                        <p class="text-[11px] text-ink-400 dark:text-sage-600 mt-0.5 capitalize truncate">{{ $page.props.auth.user.role?.replace('_', ' ') }}</p>
+                        <p class="text-sm font-medium text-ink-900 dark:text-white truncate leading-none">{{ $page.props.auth.user.name }}</p>
+                        <p class="text-[11px] text-ink-400 dark:text-white mt-0.5 capitalize truncate">{{ $page.props.auth.user.role?.replace('_', ' ') }}</p>
                     </div>
-                    <svg class="w-3.5 h-3.5 text-ink-300 dark:text-sage-600 shrink-0 transition-transform duration-200" :class="dropdownOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <svg class="w-3.5 h-3.5 text-ink-300 dark:text-white shrink-0 transition-transform duration-200" :class="dropdownOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
@@ -67,22 +67,22 @@
                 >
                     <div v-if="dropdownOpen" class="absolute bottom-full left-3 right-3 mb-2 bg-white dark:bg-ink-800 rounded-xl shadow-lg border border-ink-900/8 dark:border-sage-300/8 py-1 origin-bottom">
                         <div class="px-4 py-3 border-b border-ink-100 dark:border-sage-300/8">
-                            <p class="text-sm font-semibold text-ink-900 dark:text-sage-200 truncate">{{ $page.props.auth.user.name }}</p>
-                            <p class="text-xs text-ink-400 dark:text-sage-500 mt-0.5 truncate">{{ $page.props.auth.user.email }}</p>
+                            <p class="text-sm font-semibold text-ink-900 dark:text-white truncate">{{ $page.props.auth.user.name }}</p>
+                            <p class="text-xs text-ink-400 dark:text-white mt-0.5 truncate">{{ $page.props.auth.user.email }}</p>
                         </div>
 
                         <Link href="/profile" @click="dropdownOpen = false"
-                            class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-ink-700 dark:text-sage-300 hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
-                            <svg class="w-4 h-4 text-ink-400 dark:text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-ink-700 dark:text-white hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
+                            <svg class="w-4 h-4 text-ink-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                             </svg>
                             Profil Saya
                         </Link>
 
                         <Link href="/notifications" @click="dropdownOpen = false"
-                            class="flex items-center justify-between px-4 py-2.5 text-sm text-ink-700 dark:text-sage-300 hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
+                            class="flex items-center justify-between px-4 py-2.5 text-sm text-ink-700 dark:text-white hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
                             <div class="flex items-center gap-2.5">
-                                <svg class="w-4 h-4 text-ink-400 dark:text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <svg class="w-4 h-4 text-ink-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                                 </svg>
                                 Notifikasi
@@ -93,12 +93,12 @@
                         </Link>
 
                         <button @click="toggleDark"
-                            class="w-full flex items-center justify-between px-4 py-2.5 text-sm text-ink-700 dark:text-sage-300 hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
+                            class="w-full flex items-center justify-between px-4 py-2.5 text-sm text-ink-700 dark:text-white hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
                             <div class="flex items-center gap-2.5">
-                                <svg v-if="isDark" class="w-4 h-4 text-ink-400 dark:text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <svg v-if="isDark" class="w-4 h-4 text-ink-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                                 </svg>
-                                <svg v-else class="w-4 h-4 text-ink-400 dark:text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <svg v-else class="w-4 h-4 text-ink-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
                                 </svg>
                                 {{ isDark ? 'Light Mode' : 'Dark Mode' }}
@@ -130,7 +130,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                     </svg>
                 </div>
-                <span class="text-sm font-bold text-ink-900 dark:text-sage-200 tracking-tight">ProjectMgmt</span>
+                <span class="text-sm font-bold text-ink-900 dark:text-white tracking-tight">ProjectMgmt</span>
             </Link>
 
             <!-- Mobile user button -->
@@ -144,7 +144,7 @@
                             class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-400 rounded-full border-2 border-white dark:border-ink-900">
                         </span>
                     </div>
-                    <svg class="w-3 h-3 text-ink-400 dark:text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <svg class="w-3 h-3 text-ink-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
@@ -160,22 +160,22 @@
                 >
                     <div v-if="dropdownOpen" class="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-ink-800 rounded-xl shadow-lg border border-ink-900/8 dark:border-sage-300/8 py-1 origin-top-right">
                         <div class="px-4 py-3 border-b border-ink-100 dark:border-sage-300/8">
-                            <p class="text-sm font-semibold text-ink-900 dark:text-sage-200">{{ $page.props.auth.user.name }}</p>
-                            <p class="text-xs text-ink-400 dark:text-sage-500 mt-0.5">{{ $page.props.auth.user.email }}</p>
+                            <p class="text-sm font-semibold text-ink-900 dark:text-white">{{ $page.props.auth.user.name }}</p>
+                            <p class="text-xs text-ink-400 dark:text-white mt-0.5">{{ $page.props.auth.user.email }}</p>
                         </div>
 
                         <Link href="/profile" @click="dropdownOpen = false"
-                            class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-ink-700 dark:text-sage-300 hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
-                            <svg class="w-4 h-4 text-ink-400 dark:text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-ink-700 dark:text-white hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
+                            <svg class="w-4 h-4 text-ink-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                             </svg>
                             Profil Saya
                         </Link>
 
                         <Link href="/notifications" @click="dropdownOpen = false"
-                            class="flex items-center justify-between px-4 py-2.5 text-sm text-ink-700 dark:text-sage-300 hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
+                            class="flex items-center justify-between px-4 py-2.5 text-sm text-ink-700 dark:text-white hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
                             <div class="flex items-center gap-2.5">
-                                <svg class="w-4 h-4 text-ink-400 dark:text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <svg class="w-4 h-4 text-ink-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                                 </svg>
                                 Notifikasi
@@ -186,12 +186,12 @@
                         </Link>
 
                         <button @click="toggleDark"
-                            class="w-full flex items-center justify-between px-4 py-2.5 text-sm text-ink-700 dark:text-sage-300 hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
+                            class="w-full flex items-center justify-between px-4 py-2.5 text-sm text-ink-700 dark:text-white hover:bg-sage-50 dark:hover:bg-sage-300/5 transition-colors">
                             <div class="flex items-center gap-2.5">
-                                <svg v-if="isDark" class="w-4 h-4 text-ink-400 dark:text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <svg v-if="isDark" class="w-4 h-4 text-ink-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                                 </svg>
-                                <svg v-else class="w-4 h-4 text-ink-400 dark:text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <svg v-else class="w-4 h-4 text-ink-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
                                 </svg>
                                 {{ isDark ? 'Light Mode' : 'Dark Mode' }}
@@ -240,8 +240,8 @@
                     :href="nav.href"
                     class="flex-1 flex flex-col items-center justify-center gap-1 transition-colors"
                     :class="$page.url.startsWith(nav.match)
-                        ? 'text-ink-900 dark:text-sage-300'
-                        : 'text-ink-300 dark:text-sage-700 hover:text-ink-600 dark:hover:text-sage-400'"
+                        ? 'text-ink-900 dark:text-white'
+                        : 'text-ink-300 dark:text-white hover:text-ink-600 dark:hover:text-white'"
                 >
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" :d="nav.icon" />

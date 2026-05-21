@@ -12,7 +12,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
-use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -64,8 +63,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
-                // FilamentInfoWidget removed — cleaner look
+                \App\Filament\Widgets\StatsOverviewWidget::class,
+                \App\Filament\Widgets\ProjectsOverviewWidget::class,
+                \App\Filament\Widgets\TeamMembersWidget::class,
             ])
 
             // ── Middleware ─────────────────────────────────────

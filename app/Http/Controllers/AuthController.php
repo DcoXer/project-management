@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +19,10 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         }
 
-        return Inertia::render('Auth/Login');
+        return Inertia::render('Auth/Login', [
+            'tasksSelesai'  => Task::where('status', 'done')->count(),
+            'anggotaAktif'  => User::count(),
+        ]);
     }
 
     public function login(LoginRequest $request): RedirectResponse

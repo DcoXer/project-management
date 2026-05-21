@@ -31,11 +31,11 @@
                         </div>
 
                         <!-- Message -->
-                        <p class="flex-1 leading-snug text-ink-800 dark:text-sage-200">{{ toast.message }}</p>
+                        <p class="flex-1 leading-snug text-ink-800 dark:text-white">{{ toast.message }}</p>
 
                         <!-- Close button -->
                         <button @click="remove(toast.id)"
-                            class="shrink-0 text-ink-300 dark:text-sage-600 hover:text-ink-600 dark:hover:text-sage-300 transition mt-0.5">
+                            class="shrink-0 text-ink-300 dark:text-white hover:text-ink-600 dark:hover:text-white transition mt-0.5">
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
