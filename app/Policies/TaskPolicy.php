@@ -55,6 +55,8 @@ class TaskPolicy
 
     public function comment(User $user, Task $task): bool
     {
+        if ($task->status === 'done') return false;
+
         return $this->isInvolved($user, $task);
     }
 }

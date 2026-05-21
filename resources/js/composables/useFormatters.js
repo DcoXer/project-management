@@ -2,6 +2,16 @@
 export const formatDate = d =>
     d ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
 
+export const timeAgo = d => {
+    if (!d) return '—'
+    const diff = Math.floor((Date.now() - new Date(d)) / 1000)
+    if (diff < 60)     return 'baru saja'
+    if (diff < 3600)   return `${Math.floor(diff / 60)} menit lalu`
+    if (diff < 86400)  return `${Math.floor(diff / 3600)} jam lalu`
+    if (diff < 604800) return `${Math.floor(diff / 86400)} hari lalu`
+    return formatDate(d)
+}
+
 // Tanpa tahun — dipakai di card Kanban
 export const formatDateShort = d =>
     d ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : '—'

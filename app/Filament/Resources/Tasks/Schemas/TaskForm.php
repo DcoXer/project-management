@@ -39,6 +39,10 @@ class TaskForm
                     ->relationship('creator', 'name')
                     ->required(),
                 DatePicker::make('due_date'),
+                DatePicker::make('start_date')
+                    ->label('Start Date'),
+                DatePicker::make('end_date')
+                    ->label('End Date'),
             ]);
     }
 }

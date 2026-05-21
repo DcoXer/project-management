@@ -64,14 +64,26 @@ class TaskController extends Controller
             $query->where('project_id', $request->project_id);
         }
 
-        $tasks = $query->latest()->paginate(15)->withQueryString();
+        if ($request->filled('start_date')) {
+            $query->where('start_date', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->where('end_date', '<=', $request->end_date);
+        }
+
+        $allowedSorts = ['title', 'status', 'priority', 'start_date', 'end_date', 'due_date', 'created_at'];
+        $sortBy  = in_array($request->get('sort_by'), $allowedSorts) ? $request->get('sort_by') : 'created_at';
+        $sortDir = $request->get('sort_dir') === 'asc' ? 'asc' : 'desc';
+
+        $tasks = $query->orderBy($sortBy, $sortDir)->paginate(15)->withQueryString();
 
         return Inertia::render('Tasks/Index', [
             'tasks'           => $tasks,
             'projects'        => $projects,
             'managed_projects'=> $managedProjects ?? [],
             'developers'      => $isPm ? User::where('role', 'developer')->orderBy('name')->get(['id', 'name', 'specialization']) : [],
-            'filters'         => $request->only(['status', 'priority', 'project_id']),
+            'filters'         => $request->only(['status', 'priority', 'project_id', 'start_date', 'end_date', 'sort_by', 'sort_dir']),
             'is_pm'           => $isPm,
         ]);
     }
@@ -86,7 +98,9 @@ class TaskController extends Controller
             'title'          => ['required', 'string', 'max:255'],
             'description'    => ['nullable', 'string', 'max:5000'],
             'priority'       => ['required', 'in:low,medium,high'],
-            'due_date'    => ['nullable', 'date'],
+            'due_date'       => ['nullable', 'date'],
+            'start_date'     => ['nullable', 'date'],
+            'end_date'       => ['nullable', 'date'],
         ], [
             'project_id.required'  => 'Project wajib dipilih.',
             'assigned_to.required' => 'Assignee wajib dipilih.',

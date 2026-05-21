@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -63,12 +64,21 @@ class DashboardController extends Controller
             ->take(5)
             ->get(['id', 'title', 'status', 'priority', 'due_date', 'project_id']);
 
+        $upcomingDeadlines = Task::with('project:id,name')
+            ->where('assigned_to', $user->id)
+            ->where('status', '!=', 'done')
+            ->whereNotNull('due_date')
+            ->orderBy('due_date')
+            ->take(4)
+            ->get(['id', 'title', 'project_id', 'due_date']);
+
         return Inertia::render('DashboardDev', [
-            'stats'          => $stats,
-            'recentProjects' => $recentProjects,
-            'myTasks'        => $myTasks,
-            'tasksByStatus'  => $tasksByStatus,
-            'tasksByPriority'=> $tasksByPriority,
+            'stats'             => $stats,
+            'recentProjects'    => $recentProjects,
+            'myTasks'           => $myTasks,
+            'tasksByStatus'     => $tasksByStatus,
+            'tasksByPriority'   => $tasksByPriority,
+            'upcomingDeadlines' => $upcomingDeadlines,
         ]);
     }
 
@@ -95,6 +105,10 @@ class DashboardController extends Controller
             'total_tasks'      => $teamTaskQuery()->count(),
             'pending_review'   => $statusCounts['review'] ?? 0,
             'team_members'     => $teamMembers,
+            'todo'             => $statusCounts['todo']        ?? 0,
+            'in_progress'      => $statusCounts['in_progress'] ?? 0,
+            'review'           => $statusCounts['review']      ?? 0,
+            'done'             => $statusCounts['done']        ?? 0,
         ];
 
         $recentProjects = Project::with('creator')
@@ -114,12 +128,31 @@ class DashboardController extends Controller
             ->take(5)
             ->get(['id', 'title', 'priority', 'due_date', 'project_id', 'assigned_to']);
 
+        $taskIdsInProjects = Task::whereIn('project_id', $managedProjectIds)->pluck('id');
+
+        $recentActivities = ActivityLog::with('user:id,name')
+            ->where('subject_type', Task::class)
+            ->whereIn('subject_id', $taskIdsInProjects)
+            ->latest()
+            ->take(5)
+            ->get(['id', 'user_id', 'description', 'created_at']);
+
+        $upcomingDeadlines = Task::with('project:id,name')
+            ->whereIn('project_id', $managedProjectIds)
+            ->where('status', '!=', 'done')
+            ->whereNotNull('due_date')
+            ->orderBy('due_date')
+            ->take(4)
+            ->get(['id', 'title', 'project_id', 'due_date']);
+
         return Inertia::render('DashboardPm', [
             'stats'              => $stats,
             'recentProjects'     => $recentProjects,
             'pendingReviewTasks' => $pendingReviewTasks,
             'tasksByStatus'      => $statusCounts,
             'tasksByPriority'    => $priorityCounts,
+            'recentActivities'   => $recentActivities,
+            'upcomingDeadlines'  => $upcomingDeadlines,
         ]);
     }
 }

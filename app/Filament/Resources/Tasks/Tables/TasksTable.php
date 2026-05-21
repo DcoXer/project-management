@@ -30,7 +30,16 @@ class TasksTable
                 TextColumn::make('creator.name')
                     ->label('Created By')
                     ->sortable(),
+                TextColumn::make('start_date')
+                    ->label('Start Date')
+                    ->date()
+                    ->sortable(),
+                TextColumn::make('end_date')
+                    ->label('End Date')
+                    ->date()
+                    ->sortable(),
                 TextColumn::make('due_date')
+                    ->label('Deadline')
                     ->date()
                     ->sortable(),
                 TextColumn::make('created_at')

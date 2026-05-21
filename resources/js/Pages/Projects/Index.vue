@@ -66,14 +66,6 @@
                         </div>
                     </div>
 
-                    <div v-if="project.members?.length" class="mt-3 flex items-center gap-1">
-                        <div
-                            v-for="member in project.members.slice(0,4)" :key="member.id"
-                            class="w-6 h-6 rounded-full bg-sage-200 dark:bg-sage-300/20 text-sage-700 dark:text-sage-300 text-xs font-semibold flex items-center justify-center -ml-1 first:ml-0 border-2 border-white dark:border-ink-800"
-                            :title="member.name"
-                        >{{ member.name.charAt(0).toUpperCase() }}</div>
-                        <span v-if="project.members.length > 4" class="text-xs text-ink-400 dark:text-sage-500 ml-1">+{{ project.members.length - 4 }}</span>
-                    </div>
                 </Link>
             </div>
 

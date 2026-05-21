@@ -100,18 +100,26 @@
 
                     <!-- Comment form -->
                     <div class="px-6 py-4 bg-ink-50/50 dark:bg-white/2 border-t border-ink-50 dark:border-white/4">
-                        <form @submit.prevent="submitComment" class="flex items-end gap-3">
-                            <textarea
-                                v-model="commentForm.body" rows="2" placeholder="Tulis komentar..."
-                                class="flex-1 bg-white dark:bg-ink-800 border border-ink-200 dark:border-white/8 rounded-xl px-3.5 py-2.5 text-sm text-ink-900 dark:text-sage-200 placeholder-ink-300 dark:placeholder-ink-600 focus:outline-none focus:ring-2 focus:ring-ink-900/10 dark:focus:ring-sage-300/15 resize-none transition"
-                                :class="{ 'border-red-400': commentForm.errors.body }"
-                            ></textarea>
-                            <button type="submit" :disabled="commentForm.processing || !commentForm.body.trim()"
-                                class="shrink-0 bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 text-sm px-4 py-2.5 rounded-xl font-semibold transition hover:bg-ink-700 dark:hover:bg-sage-200 disabled:opacity-40">
-                                Kirim
-                            </button>
-                        </form>
-                        <p v-if="commentForm.errors.body" class="text-xs text-red-500 mt-1.5">{{ commentForm.errors.body }}</p>
+                        <div v-if="task.status === 'done'" class="flex items-center gap-2 text-sm text-ink-400 dark:text-sage-600">
+                            <svg class="w-4 h-4 shrink-0 text-emerald-500 dark:text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
+                            </svg>
+                            Komentar dikunci — task sudah selesai.
+                        </div>
+                        <template v-else>
+                            <form @submit.prevent="submitComment" class="flex items-end gap-3">
+                                <textarea
+                                    v-model="commentForm.body" rows="2" placeholder="Tulis komentar..."
+                                    class="flex-1 bg-white dark:bg-ink-800 border border-ink-200 dark:border-white/8 rounded-xl px-3.5 py-2.5 text-sm text-ink-900 dark:text-sage-200 placeholder-ink-300 dark:placeholder-ink-600 focus:outline-none focus:ring-2 focus:ring-ink-900/10 dark:focus:ring-sage-300/15 resize-none transition"
+                                    :class="{ 'border-red-400': commentForm.errors.body }"
+                                ></textarea>
+                                <button type="submit" :disabled="commentForm.processing || !commentForm.body.trim()"
+                                    class="shrink-0 bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 text-sm px-4 py-2.5 rounded-xl font-semibold transition hover:bg-ink-700 dark:hover:bg-sage-200 disabled:opacity-40">
+                                    Kirim
+                                </button>
+                            </form>
+                            <p v-if="commentForm.errors.body" class="text-xs text-red-500 mt-1.5">{{ commentForm.errors.body }}</p>
+                        </template>
                     </div>
                 </div>
 

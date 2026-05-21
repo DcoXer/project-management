@@ -64,7 +64,7 @@
                             ? 'border-dashed ' + col.borderActive + ' bg-white dark:bg-ink-800'
                             : 'border-transparent bg-ink-100/60 dark:bg-ink-800/40'"
                         @dragover.prevent="dragOverCol = col.key"
-                        @dragleave="dragOverCol = null"
+                        @dragleave="(e) => { if (!e.currentTarget.contains(e.relatedTarget)) dragOverCol = null }"
                         @drop.prevent="onDrop(col.key)"
                     >
                         <!-- Empty state -->
@@ -79,6 +79,7 @@
                             :draggable="isDraggable(task, col.key)"
                             @dragstart="isDraggable(task, col.key) ? onDragStart(task, col.key) : $event.preventDefault()"
                             @dragend="dragOverCol = null"
+                            @dragover.prevent
                             class="bg-white dark:bg-ink-800 rounded-xl border border-ink-900/8 dark:border-sage-300/8 p-3.5 shadow-sm transition-all select-none"
                             :class="[
                                 isDraggable(task, col.key)
@@ -233,15 +234,19 @@ const onDrop = async (toCol) => {
     localColumns[toCol].unshift({ ...task, status: toCol })
 
     try {
-        await axios.patch(`/tasks/${task.id}/status`, { status: toCol })
+        await axios.patch(`/tasks/${task.id}/status`, { status: toCol }, {
+            headers: { Accept: 'application/json' },
+        })
         toastSuccess('Task dimulai, status berubah ke In Progress.')
     } catch (err) {
         // Rollback on error
         localColumns[toCol] = localColumns[toCol].filter(t => t.id !== task.id)
         localColumns[fromCol].unshift(task)
-        const msg = err.response?.status === 403
-            ? 'Kamu tidak punya akses untuk mengubah status task ini.'
-            : 'Gagal mengubah status, coba lagi.'
+        const status = err.response?.status
+        const msg = status === 403 ? 'Kamu tidak punya akses untuk mengubah status task ini.'
+                  : status === 419 ? 'Sesi kadaluarsa, silakan refresh halaman.'
+                  : status === 422 ? (err.response?.data?.message ?? 'Validasi gagal.')
+                  : 'Gagal mengubah status, coba lagi.'
         toastError(msg)
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
-#[Fillable(['project_id', 'title', 'description', 'status', 'priority', 'assigned_to', 'created_by', 'due_date', 'proof', 'proof_file', 'rejection_reason'])]
+#[Fillable(['project_id', 'title', 'description', 'status', 'priority', 'assigned_to', 'created_by', 'due_date', 'start_date', 'end_date', 'proof', 'proof_file', 'rejection_reason'])]
 class Task extends Model
 {
     use HasFactory;
@@ -18,7 +18,9 @@ class Task extends Model
     protected function casts(): array
     {
         return [
-            'due_date' => 'date',
+            'due_date'   => 'date',
+            'start_date' => 'date',
+            'end_date'   => 'date',
         ];
     }
 
