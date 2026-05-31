@@ -26,7 +26,7 @@ class UserResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'System';
+        return 'Management';
     }
 
     public static function getNavigationLabel(): string

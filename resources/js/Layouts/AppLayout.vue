@@ -40,8 +40,9 @@
                     class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-ink-50 dark:hover:bg-white/4 transition-colors text-left group"
                 >
                     <div class="relative shrink-0">
-                        <div class="w-7 h-7 rounded-full bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 text-xs font-bold flex items-center justify-center">
-                            {{ $page.props.auth.user.name.charAt(0).toUpperCase() }}
+                        <div class="w-7 h-7 rounded-full overflow-hidden bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 text-xs font-bold flex items-center justify-center">
+                            <img v-if="$page.props.auth.user.avatar_url" :src="$page.props.auth.user.avatar_url" alt="avatar" class="w-full h-full object-cover" />
+                            <span v-else>{{ $page.props.auth.user.name.charAt(0).toUpperCase() }}</span>
                         </div>
                         <span v-if="$page.props.auth.user.unread_notifications_count > 0"
                             class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-400 rounded-full border-2 border-white dark:border-ink-900">
@@ -130,15 +131,16 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                     </svg>
                 </div>
-                <span class="text-sm font-bold text-ink-900 dark:text-white tracking-tight">ProjectMgmt</span>
+                <span class="text-sm font-bold text-ink-900 dark:text-white tracking-tight">Project Management</span>
             </Link>
 
             <!-- Mobile user button -->
             <div class="relative" ref="mobileDropdownRef">
                 <button @click="dropdownOpen = !dropdownOpen" class="flex items-center gap-1.5 pl-1.5 pr-2 py-1.5 rounded-lg hover:bg-ink-50 dark:hover:bg-white/5 transition-colors">
                     <div class="relative">
-                        <div class="w-7 h-7 rounded-full bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 text-xs font-bold flex items-center justify-center">
-                            {{ $page.props.auth.user.name.charAt(0).toUpperCase() }}
+                        <div class="w-7 h-7 rounded-full overflow-hidden bg-ink-900 dark:bg-sage-300 text-white dark:text-ink-900 text-xs font-bold flex items-center justify-center">
+                            <img v-if="$page.props.auth.user.avatar_url" :src="$page.props.auth.user.avatar_url" alt="avatar" class="w-full h-full object-cover" />
+                            <span v-else>{{ $page.props.auth.user.name.charAt(0).toUpperCase() }}</span>
                         </div>
                         <span v-if="$page.props.auth.user.unread_notifications_count > 0"
                             class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-400 rounded-full border-2 border-white dark:border-ink-900">
@@ -306,7 +308,7 @@ const navLinks = computed(() => [
     {
         href: '/tasks', match: '/tasks', label: page.props.auth.user?.is_pm ? 'Team Tasks' : 'My Tasks',
         icon: 'M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z',
-    },
+    },  
 ])
 
 const logout = () => {

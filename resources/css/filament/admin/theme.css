@@ -4,219 +4,252 @@
 @source '../../../../resources/views/filament/**/*';
 
 /* ============================================================
-   SIDEBAR — dark navy
+   LIGHT MODE VARIABLES (default)
    ============================================================ */
+:root {
+    --pm-bg:        #f5f6fa;
+    --pm-surface:   #ffffff;
+    --pm-surface-2: #f8f9fb;
 
-.fi-sidebar {
-    background-color: #0f172a;
-    border-right: 1px solid rgba(255 255 255 / 0.06);
-}
+    --pm-border:       #e8eaf0;
+    --pm-border-light: #f0f1f6;
 
-/* Sidebar header (brand area) */
-.fi-sidebar-header,
-:not(.fi-body-has-topbar) .fi-sidebar-header {
-    background-color: #0f172a;
-    border-bottom: 1px solid rgba(255 255 255 / 0.06);
-    box-shadow: none;
-    ring: 0;
-}
+    --pm-text-primary:   #1a1d2e;
+    --pm-text-secondary: #6b7280;
+    --pm-text-muted:     #adb1c4;
 
-/* Top bar brand area when there's a topbar */
-.fi-body-has-topbar .fi-sidebar-header {
-    background-color: #0f172a;
-    box-shadow: none;
-    --tw-ring-color: rgba(255 255 255 / 0.06);
-}
+    --pm-accent:      #6366f1;
+    --pm-accent-dim:  #eef0fd;
+    --pm-accent-hover:#4f52c9;
 
-/* Nav scroll container */
-.fi-sidebar-nav {
-    padding: 1rem 0.75rem;
-    gap: 1.25rem;
-}
-
-/* Group label */
-.fi-sidebar-group-label {
-    color: rgb(100 116 139);
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding-left: 0.5rem;
-}
-
-/* Nav item default */
-.fi-sidebar-item-btn {
-    border-radius: 0.5rem;
-    padding: 0.5rem 0.625rem;
-}
-
-.fi-sidebar-item-btn > .fi-icon {
-    color: rgb(100 116 139);
-}
-
-.fi-sidebar-item-label {
-    color: rgb(148 163 184);
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-/* Nav item hover */
-.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover,
-.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:focus-visible {
-    background-color: rgba(255 255 255 / 0.07);
-}
-
-.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover > .fi-icon,
-.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover > .fi-sidebar-item-label {
-    color: rgb(226 232 240);
-}
-
-/* Nav item active */
-.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
-    background-color: rgba(59 130 246 / 0.15);
-}
-
-.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
-    color: rgb(96 165 250);
-}
-
-.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
-    color: rgb(147 197 253);
-}
-
-/* Sidebar footer */
-.fi-sidebar-footer {
-    border-top: 1px solid rgba(255 255 255 / 0.06);
-    margin: 0;
-    padding: 0.75rem;
+    --pm-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --pm-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 /* ============================================================
-   TOPBAR — dark navy, matching sidebar
+   DARK MODE VARIABLES
    ============================================================ */
+.dark {
+    --pm-bg:        #0f1117;
+    --pm-surface:   #161b27;
+    --pm-surface-2: #1d2235;
 
-.fi-topbar-ctn {
-    background-color: #0f172a;
-    border-bottom: 1px solid rgba(255 255 255 / 0.06);
+    --pm-border:       rgba(255,255,255,0.08);
+    --pm-border-light: rgba(255,255,255,0.04);
+
+    --pm-text-primary:   #f0f1f8;
+    --pm-text-secondary: #a0a4bc;
+    --pm-text-muted:     #555870;
+
+    --pm-accent:      #7c6ef5;
+    --pm-accent-dim:  rgba(124,110,245,0.15);
+    --pm-accent-hover:#6d5fe6;
+
+    --pm-shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+    --pm-shadow-md: 0 4px 16px rgba(0,0,0,0.5);
 }
 
-.fi-topbar {
-    background-color: #0f172a;
-    border-bottom: none;
-    box-shadow: none;
-    --tw-ring-color: transparent;
-    --tw-shadow: none;
+/* ============================================================
+   BODY / LAYOUT
+   ============================================================ */
+html, body,
+.fi-body,
+.fi-layout,
+.fi-layout-sidebar,
+.fi-layout-sidebar-with-topbar,
+.fi-main,
+.fi-main-ctn {
+    background-color: var(--pm-bg) !important;
+    color: var(--pm-text-primary) !important;
 }
 
-/* Topbar icons & buttons */
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+nav[class*="fi-topbar"],
+header[class*="fi-topbar"],
+div[class*="fi-topbar"],
+.fi-topbar,
+.fi-topbar-ctn,
+.fi-topbar-nav,
+.fi-topbar-start,
+.fi-topbar-end,
+[class*="topbar"] {
+    background-color: var(--pm-surface) !important;
+    border-bottom: 1px solid var(--pm-border) !important;
+    box-shadow: none !important;
+    color: var(--pm-text-primary) !important;
+}
+
+.fi-topbar > *, .fi-topbar-ctn > *, [class*="fi-topbar"] > * {
+    background-color: transparent !important;
+}
+
 .fi-topbar .fi-icon-btn,
-.fi-topbar .fi-btn-color-gray {
-    color: rgb(148 163 184);
+.fi-topbar button,
+.fi-topbar a,
+[class*="fi-topbar"] button,
+[class*="fi-topbar"] a {
+    color: var(--pm-text-secondary) !important;
+    background-color: transparent !important;
 }
 
-.fi-topbar .fi-icon-btn:hover {
-    background-color: rgba(255 255 255 / 0.07);
-    color: rgb(226 232 240);
+.fi-topbar .fi-icon-btn:hover,
+.fi-topbar button:hover,
+[class*="fi-topbar"] button:hover {
+    background-color: var(--pm-bg) !important;
+    color: var(--pm-text-primary) !important;
 }
 
-/* Topbar nav items (top navigation mode) */
-.fi-topbar-item-label {
-    color: rgb(148 163 184);
+.fi-topbar-start, .fi-topbar-start *,
+.fi-brand-name, .fi-logo, .fi-logo * {
+    color: var(--pm-text-primary) !important;
 }
 
-.fi-topbar-item-btn:hover {
-    background-color: rgba(255 255 255 / 0.07);
-}
-
-.fi-topbar-item-btn:hover > .fi-icon,
-.fi-topbar-item-btn:hover .fi-topbar-item-label {
-    color: rgb(226 232 240);
-}
-
-.fi-topbar-item.fi-active .fi-topbar-item-btn {
-    background-color: rgba(59 130 246 / 0.15);
-}
-
-.fi-topbar-item.fi-active .fi-topbar-item-label,
-.fi-topbar-item.fi-active .fi-topbar-item-btn > .fi-icon {
-    color: rgb(147 197 253);
-}
-
-/* Collapse/expand sidebar button in topbar */
 .fi-topbar-open-sidebar-btn,
 .fi-topbar-close-sidebar-btn,
 .fi-topbar-open-collapse-sidebar-btn,
 .fi-topbar-close-collapse-sidebar-btn {
-    color: rgb(148 163 184);
+    color: var(--pm-text-secondary) !important;
+    background-color: transparent !important;
 }
 
 .fi-topbar-open-sidebar-btn:hover,
 .fi-topbar-close-sidebar-btn:hover,
 .fi-topbar-open-collapse-sidebar-btn:hover,
 .fi-topbar-close-collapse-sidebar-btn:hover {
-    background-color: rgba(255 255 255 / 0.07);
-    color: rgb(226 232 240);
-}
-
-/* User menu / account button in topbar */
-.fi-topbar-end .fi-dropdown-trigger,
-.fi-topbar-end .fi-user-menu-trigger {
-    color: rgb(148 163 184);
-}
-
-.fi-topbar-end .fi-dropdown-trigger:hover,
-.fi-topbar-end .fi-user-menu-trigger:hover {
-    background-color: rgba(255 255 255 / 0.07);
-    color: rgb(226 232 240);
-}
-
-/* Logo text in topbar */
-.fi-topbar-start .fi-logo,
-.fi-topbar-start span {
-    color: #ffffff;
+    background-color: var(--pm-bg) !important;
+    color: var(--pm-text-primary) !important;
 }
 
 /* ============================================================
-   BODY / LAYOUT
+   SIDEBAR
    ============================================================ */
-
-.fi-body {
-    background-color: #f8fafc;
+.fi-sidebar,
+aside[class*="fi-sidebar"],
+[class*="fi-sidebar"]:not([class*="item"]):not([class*="nav"]):not([class*="group"]):not([class*="footer"]):not([class*="header"]) {
+    background-color: var(--pm-surface) !important;
+    border-right: 1px solid var(--pm-border) !important;
+    box-shadow: none !important;
 }
 
-.fi-main {
-    background-color: #f8fafc;
+.fi-sidebar-header,
+:not(.fi-body-has-topbar) .fi-sidebar-header,
+.fi-body-has-topbar .fi-sidebar-header {
+    background-color: var(--pm-surface) !important;
+    border-bottom: 1px solid var(--pm-border-light) !important;
+    box-shadow: none !important;
+}
+
+.fi-sidebar-footer {
+    background-color: var(--pm-surface) !important;
+    border-top: 1px solid var(--pm-border-light) !important;
+}
+
+.fi-sidebar-nav {
+    padding: 0.75rem !important;
+    gap: 1rem !important;
+    background-color: var(--pm-surface) !important;
+}
+
+/* Group label */
+.fi-sidebar-group-label {
+    color: var(--pm-text-muted) !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    padding-left: 0.5rem !important;
+}
+
+/* Nav item default */
+.fi-sidebar-item-btn {
+    border-radius: 0.625rem !important;
+    padding: 0.5rem 0.625rem !important;
+    margin-bottom: 2px !important;
+    background-color: transparent !important;
+}
+
+.fi-sidebar-item-btn > .fi-icon {
+    color: var(--pm-text-muted) !important;
+}
+
+.fi-sidebar-item-label {
+    color: var(--pm-text-secondary) !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+}
+
+/* Hover */
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover,
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:focus-visible {
+    background-color: var(--pm-bg) !important;
+}
+
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover > .fi-icon,
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover > .fi-sidebar-item-label {
+    color: var(--pm-text-primary) !important;
+}
+
+/* Active */
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    background-color: var(--pm-accent-dim) !important;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
+    color: var(--pm-accent) !important;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+    color: var(--pm-accent) !important;
+    font-weight: 600 !important;
+}
+
+/* Dark mode: active label stays bright */
+.dark .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+    color: var(--pm-text-primary) !important;
 }
 
 /* ============================================================
    PAGE HEADER
    ============================================================ */
-
 .fi-header-heading {
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: #0f172a;
-    letter-spacing: -0.015em;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    color: var(--pm-text-primary) !important;
+    letter-spacing: -0.015em !important;
 }
 
 .fi-header-subheading {
-    color: rgb(100 116 139);
-    font-size: 0.875rem;
+    color: var(--pm-text-secondary) !important;
+    font-size: 0.875rem !important;
 }
 
 /* ============================================================
    CARDS & SECTIONS
    ============================================================ */
-
 .fi-section {
-    border-radius: 0.875rem;
-    border-color: rgb(226 232 240);
-    box-shadow: 0 1px 3px rgba(0 0 0 / 0.04), 0 1px 2px rgba(0 0 0 / 0.04);
-    background-color: #ffffff;
+    border-radius: 1rem !important;
+    border: 1px solid var(--pm-border) !important;
+    box-shadow: var(--pm-shadow-sm) !important;
+    background-color: var(--pm-surface) !important;
 }
 
 .fi-section-header {
-    border-bottom-color: rgb(241 245 249);
+    border-bottom: 1px solid var(--pm-border-light) !important;
+    background-color: var(--pm-surface) !important;
+}
+
+.fi-section-header-heading {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: var(--pm-text-primary) !important;
+}
+
+.fi-section-content,
+.fi-section-content-ctn {
+    background-color: var(--pm-surface) !important;
+    color: var(--pm-text-secondary) !important;
 }
 
 /* ============================================================
@@ -224,85 +257,326 @@
    ============================================================ */
 
 .fi-ta-ctn {
-    border-radius: 0.875rem;
-    border: 1px solid rgb(226 232 240);
-    box-shadow: 0 1px 3px rgba(0 0 0 / 0.04);
-    overflow: hidden;
+    border-radius: 1rem !important;
+    border: 1px solid var(--pm-border) !important;
+    box-shadow: var(--pm-shadow-sm) !important;
+    overflow: hidden !important;
+    background-color: var(--pm-surface) !important;
 }
 
 .fi-ta-header-ctn {
-    background-color: rgb(248 250 252);
-    border-bottom: 1px solid rgb(226 232 240);
+    background-color: var(--pm-surface) !important;
+    border-bottom: 1px solid var(--pm-border-light) !important;
+    padding: 1rem 1.25rem !important;
+}
+
+.fi-ta-header-cell {
+    background-color: var(--pm-surface-2) !important;
+    font-size: 0.6875rem !important;
+    font-weight: 600 !important;
+    color: var(--pm-text-muted) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+}
+
+.fi-ta-cell {
+    font-size: 0.8125rem !important;
+    color: var(--pm-text-secondary) !important;
+    border-bottom: 1px solid var(--pm-border-light) !important;
+    background-color: var(--pm-surface) !important;
 }
 
 .fi-ta-row:hover td,
 .fi-ta-row:hover th {
-    background-color: rgb(248 250 252);
+    background-color: var(--pm-surface-2) !important;
+}
+
+/* ============================================================
+   STATS WIDGET
+   ============================================================ */
+
+/* Hapus semua wrapper di sekitar stats cards — target semua descendant kecuali stat card */
+.fi-wi-stats-overview {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    --tw-shadow: none !important;
+    --tw-ring-shadow: none !important;
+}
+
+/* Hapus semua elemen wrapper di dalam stats overview */
+.fi-wi-stats-overview .fi-section,
+.fi-wi-stats-overview .fi-sc-section,
+.fi-wi-stats-overview .fi-section-not-contained,
+.fi-wi-stats-overview .fi-section-content-ctn,
+.fi-wi-stats-overview .fi-section-content,
+.fi-wi-stats-overview .fi-section-header,
+.fi-wi-stats-overview .fi-section-header-ctn,
+.fi-wi-stats-overview [class*="fi-section"] {
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    --tw-shadow: none !important;
+    --tw-ring-shadow: none !important;
+    --tw-ring-color: transparent !important;
+}
+
+
+.fi-wi-stats-overview-stat {
+    border-radius: 1rem !important;
+    border: 1px solid var(--pm-border) !important;
+    box-shadow: var(--pm-shadow-sm) !important;
+    background-color: var(--pm-surface) !important;
+    overflow: hidden !important;
+}
+
+.fi-wi-stats-overview-stat-value {
+    font-size: 1.875rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.025em !important;
+    color: var(--pm-text-primary) !important;
+}
+
+.fi-wi-stats-overview-stat-label {
+    color: var(--pm-text-secondary) !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+}
+
+.fi-wi-stats-overview-stat-description {
+    font-size: 0.75rem !important;
+    color: var(--pm-text-muted) !important;
 }
 
 /* ============================================================
    BUTTONS
    ============================================================ */
-
 .fi-btn {
-    border-radius: 0.5rem;
-    font-weight: 600;
+    border-radius: 0.625rem !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+}
+
+.fi-btn-color-primary {
+    background-color: var(--pm-accent) !important;
+    border-color: var(--pm-accent) !important;
+    color: #ffffff !important;
+    box-shadow: 0 1px 3px rgba(99,102,241,0.3) !important;
+}
+
+.fi-btn-color-primary:hover {
+    background-color: var(--pm-accent-hover) !important;
+    border-color: var(--pm-accent-hover) !important;
+}
+
+.fi-btn-color-gray {
+    background-color: var(--pm-surface) !important;
+    border: 1px solid var(--pm-border) !important;
+    color: var(--pm-text-secondary) !important;
+}
+
+.fi-btn-color-gray:hover {
+    background-color: var(--pm-bg) !important;
+    color: var(--pm-text-primary) !important;
 }
 
 /* ============================================================
    BADGES
    ============================================================ */
-
 .fi-badge {
-    border-radius: 9999px;
-    font-weight: 600;
-    font-size: 0.7rem;
-    letter-spacing: 0.01em;
+    border-radius: 0.375rem !important;
+    font-weight: 600 !important;
+    font-size: 0.6875rem !important;
+    padding: 3px 8px !important;
+    border: none !important;
 }
+
+/* Light mode badges */
+.fi-badge.fi-color-success { background-color: #ecfdf5 !important; color: #059669 !important; }
+.fi-badge.fi-color-warning { background-color: #fffbeb !important; color: #d97706 !important; }
+.fi-badge.fi-color-danger  { background-color: #fef2f2 !important; color: #dc2626 !important; }
+.fi-badge.fi-color-info    { background-color: #eff6ff !important; color: #3b82f6 !important; }
+.fi-badge.fi-color-primary { background-color: var(--pm-accent-dim) !important; color: var(--pm-accent) !important; }
+.fi-badge.fi-color-gray    { background-color: #f1f2f6 !important; color: #6b7280 !important; }
+
+/* Dark mode badges */
+.dark .fi-badge.fi-color-success { background-color: rgba(16,185,129,0.15) !important; color: #34d399 !important; }
+.dark .fi-badge.fi-color-warning { background-color: rgba(245,158,11,0.15) !important; color: #fbbf24 !important; }
+.dark .fi-badge.fi-color-danger  { background-color: rgba(239,68,68,0.15) !important;  color: #f87171 !important; }
+.dark .fi-badge.fi-color-info    { background-color: rgba(59,130,246,0.15) !important; color: #60a5fa !important; }
+.dark .fi-badge.fi-color-primary { background-color: var(--pm-accent-dim) !important;  color: #a5a0f9 !important; }
+.dark .fi-badge.fi-color-gray    { background-color: rgba(255,255,255,0.06) !important; color: var(--pm-text-secondary) !important; }
 
 /* ============================================================
    FORM INPUTS
    ============================================================ */
-
-.fi-input {
-    border-radius: 0.5rem;
-    border-color: rgb(203 213 225);
+.fi-input, .fi-select-input, .fi-textarea {
+    border-radius: 0.625rem !important;
+    border: 1px solid var(--pm-border) !important;
+    background-color: var(--pm-surface) !important;
+    color: var(--pm-text-primary) !important;
+    font-size: 0.8125rem !important;
+    box-shadow: none !important;
 }
 
-.fi-input:focus {
-    border-color: rgb(59 130 246);
-    box-shadow: 0 0 0 3px rgba(59 130 246 / 0.12);
+.dark .fi-input,
+.dark .fi-select-input,
+.dark .fi-textarea {
+    background-color: var(--pm-surface-2) !important;
+}
+
+.fi-input::placeholder,
+.fi-select-input::placeholder,
+.fi-textarea::placeholder {
+    color: var(--pm-text-muted) !important;
+}
+
+.fi-input:focus, .fi-select-input:focus, .fi-textarea:focus {
+    border-color: var(--pm-accent) !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.12) !important;
+}
+
+.dark .fi-input:focus,
+.dark .fi-select-input:focus,
+.dark .fi-textarea:focus {
+    box-shadow: 0 0 0 3px rgba(124,110,245,0.15) !important;
+}
+
+.fi-fo-field-wrp-label, .fi-fo-field-wrp-label * {
+    color: var(--pm-text-secondary) !important;
 }
 
 /* ============================================================
-   WIDGET — Stats overview
+   DROPDOWN
    ============================================================ */
-
-.fi-wi-stats-overview-stat {
-    border-radius: 0.875rem;
-    border-color: rgb(226 232 240);
-    box-shadow: 0 1px 3px rgba(0 0 0 / 0.04);
-    background-color: #ffffff;
+.fi-dropdown-panel {
+    background-color: var(--pm-surface) !important;
+    border: 1px solid var(--pm-border) !important;
+    border-radius: 0.875rem !important;
+    box-shadow: var(--pm-shadow-md) !important;
 }
 
-.fi-wi-stats-overview-stat-value {
-    font-size: 1.875rem;
-    font-weight: 700;
-    letter-spacing: -0.025em;
+.fi-dropdown-list-item:hover {
+    background-color: var(--pm-bg) !important;
 }
 
-.fi-wi-stats-overview-stat-label {
-    color: rgb(100 116 139);
-    font-size: 0.8125rem;
-    font-weight: 500;
+.fi-dropdown-list-item-label {
+    color: var(--pm-text-secondary) !important;
+    font-size: 0.8125rem !important;
+}
+
+/* ============================================================
+   PAGINATION
+   ============================================================ */
+.fi-pagination-item-btn {
+    border-radius: 0.5rem !important;
+    font-size: 0.8125rem !important;
+    color: var(--pm-text-secondary) !important;
+    background-color: transparent !important;
+}
+
+.fi-pagination-item-btn:hover {
+    background-color: var(--pm-bg) !important;
+    color: var(--pm-text-primary) !important;
+}
+
+.fi-pagination-item-btn[aria-current="page"] {
+    background-color: var(--pm-accent-dim) !important;
+    color: var(--pm-accent) !important;
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.fi-modal-window {
+    background-color: var(--pm-surface) !important;
+    border: 1px solid var(--pm-border) !important;
+    border-radius: 1.125rem !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12) !important;
+}
+
+.dark .fi-modal-window {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6) !important;
+}
+
+.fi-modal-header {
+    border-bottom: 1px solid var(--pm-border-light) !important;
+}
+
+.fi-modal-heading {
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    color: var(--pm-text-primary) !important;
+}
+
+.fi-modal-content, .fi-modal-footer {
+    background-color: var(--pm-surface) !important;
 }
 
 /* ============================================================
    LOGIN PAGE
    ============================================================ */
+.fi-simple-layout, .fi-simple-main-ctn {
+    background-color: var(--pm-bg) !important;
+}
 
 .fi-simple-main {
-    border-radius: 1rem;
-    box-shadow: 0 4px 24px rgba(0 0 0 / 0.08), 0 1px 4px rgba(0 0 0 / 0.06);
-    border: 1px solid rgb(226 232 240);
+    border-radius: 1.125rem !important;
+    box-shadow: var(--pm-shadow-md) !important;
+    border: 1px solid var(--pm-border) !important;
+    background-color: var(--pm-surface) !important;
 }
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+.fi-global-search-field,
+.fi-global-search-field input {
+    background-color: var(--pm-bg) !important;
+    border-color: var(--pm-border) !important;
+    color: var(--pm-text-primary) !important;
+    border-radius: 0.625rem !important;
+}
+
+.dark .fi-global-search-field,
+.dark .fi-global-search-field input {
+    background-color: var(--pm-surface-2) !important;
+}
+
+/* ============================================================
+   AVATAR / USER ICON
+   ============================================================ */
+.fi-avatar {
+    background-color: var(--pm-accent) !important;
+    color: #fff !important;
+}
+
+/* ============================================================
+   GENERIC TEXT OVERRIDES (uses CSS vars so works both modes)
+   ============================================================ */
+[class*="text-gray-900"], [class*="text-gray-800"], [class*="text-gray-700"] {
+    color: var(--pm-text-primary) !important;
+}
+
+[class*="text-gray-500"], [class*="text-gray-400"], [class*="text-gray-600"] {
+    color: var(--pm-text-secondary) !important;
+}
+
+[class*="border-gray-200"], [class*="border-gray-100"], [class*="divide-gray-100"] {
+    border-color: var(--pm-border) !important;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--pm-border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--pm-text-muted); }

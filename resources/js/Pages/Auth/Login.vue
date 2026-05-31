@@ -74,7 +74,7 @@
                 </div>
 
                 <div class="mb-7">
-                    <h1 class="text-2xl font-bold text-ink-900 dark:text-white tracking-tight">Selamat datang</h1>
+                    <h1 class="text-2xl font-bold text-ink-900 dark:text-white tracking-tight">Selamat Datang</h1>
                     <p class="text-sm text-ink-400 dark:text-ink-300 mt-1">Masuk untuk melanjutkan</p>
                 </div>
 

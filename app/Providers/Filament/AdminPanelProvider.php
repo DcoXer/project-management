@@ -34,24 +34,23 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(fn () => view('filament.brand'))
 
             // ── Colors ─────────────────────────────────────────
-            ->colors([
-                'primary' => Color::Blue,
-                'gray'    => Color::Slate,
-            ])
+         ->colors([
+            'primary' => Color::Indigo,  // biar match sama accent #6366f1
+            'gray'    => Color::Slate,
+         ])
 
             // ── Typography ─────────────────────────────────────
-            ->font('Inter')
+            ->font('Plus Jakarta Sans')
 
             // ── Layout ─────────────────────────────────────────
             ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('16rem')
             ->maxContentWidth(Width::Full)
             ->viteTheme('resources/css/filament/admin/theme.css')
 
             // ── Navigation groups ──────────────────────────────
             ->navigationGroups([
                 NavigationGroup::make('Management')
-                    ->collapsible(false),
-                NavigationGroup::make('System')
                     ->collapsible(false),
             ])
 

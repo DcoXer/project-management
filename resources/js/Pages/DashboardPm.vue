@@ -169,7 +169,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Link } from '@inertiajs/vue3'
-import { onMounted, ref, computed, nextTick } from 'vue'
+import { onMounted, onUnmounted, ref, computed, nextTick } from 'vue'
 import {
     Chart, BarController, BarElement, CategoryScale, LinearScale,
     Tooltip, Legend, DoughnutController, ArcElement
@@ -195,8 +195,11 @@ const statusChartRef   = ref(null)
 const displayedValues  = ref([0, 0, 0, 0])
 const animateProgress  = ref(false)
 
+const now = ref(new Date())
+let clockTimer = null
+
 const greeting = computed(() => {
-    const h = new Date().getHours()
+    const h = now.value.getHours()
     if (h < 12) return 'Selamat pagi'
     if (h < 17) return 'Selamat siang'
     if (h < 20) return 'Selamat sore'
@@ -204,7 +207,7 @@ const greeting = computed(() => {
 })
 
 const currentDate = computed(() =>
-    new Intl.DateTimeFormat('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date())
+    new Intl.DateTimeFormat('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).format(now.value)
 )
 
 const SPARKLINES = [
@@ -247,6 +250,8 @@ const deadlineUrgency = dueDate => {
 }
 
 onMounted(() => {
+    clockTimer = setInterval(() => { now.value = new Date() }, 60000)
+
     nextTick(() => {
         statCards.value.forEach((card, i) => {
             const target = card.value
@@ -336,6 +341,8 @@ onMounted(() => {
         }, 420)
     })
 })
+
+onUnmounted(() => clearInterval(clockTimer))
 </script>
 
 <style scoped>

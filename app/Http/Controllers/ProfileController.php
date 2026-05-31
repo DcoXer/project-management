@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -13,9 +14,40 @@ class ProfileController extends Controller
 {
     public function show(Request $request): Response
     {
-        return Inertia::render('Profile', [
-            'user' => $request->user()->only(['id', 'name', 'email', 'role', 'created_at']),
+        $user = $request->user()->only(['id', 'name', 'email', 'role', 'created_at', 'avatar']);
+        $user['avatar_url'] = $request->user()->avatar
+            ? Storage::disk('public')->url($request->user()->avatar)
+            : null;
+
+        return Inertia::render('Profile', ['user' => $user]);
+    }
+
+    public function updatePhoto(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'photo' => ['required', 'image', 'max:2048'],
         ]);
+
+        $user = $request->user();
+
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $ext      = $request->file('photo')->getClientOriginalExtension() ?: 'jpg';
+        $filename = $user->id . '_' . time() . '.' . $ext;
+        $dir      = storage_path('app/public/avatars');
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $request->file('photo')->move($dir, $filename);
+        $path = 'avatars/' . $filename;
+
+        $user->update(['avatar' => $path]);
+
+        return back()->with('success', 'Foto profil berhasil diperbarui.');
     }
 
     public function updateInfo(Request $request): RedirectResponse

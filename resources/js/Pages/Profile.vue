@@ -4,7 +4,6 @@
 
             <!-- ── Profile Hero ─────────────────────────────────────── -->
             <div class="bg-white dark:bg-ink-900 rounded-2xl border border-ink-900/6 dark:border-white/5 shadow-sm">
-                <!-- Decorative band — overflow-hidden hanya di sini supaya avatar tidak terpotong -->
                 <div class="h-28 relative bg-ink-900 dark:bg-ink-850 rounded-t-2xl overflow-hidden">
                     <div class="absolute inset-0"
                         style="background-image: radial-gradient(ellipse at 20% 60%, rgba(110,231,183,0.25) 0%, transparent 55%), radial-gradient(ellipse at 80% 30%, rgba(167,139,250,0.2) 0%, transparent 50%), radial-gradient(ellipse at 60% 80%, rgba(251,191,36,0.1) 0%, transparent 45%)">
@@ -15,12 +14,45 @@
                 </div>
 
                 <div class="px-6 pb-6">
-                    <!-- Avatar overlap — z-10 supaya di atas band -->
                     <div class="flex items-end justify-between -mt-11 mb-4">
-                        <div class="relative z-10 w-[72px] h-[72px] rounded-2xl bg-gradient-to-br from-sage-300 to-sage-400 dark:from-sage-300/80 dark:to-sage-400/60 text-ink-900 text-2xl font-black flex items-center justify-center border-4 border-white dark:border-ink-900 shadow-lg select-none">
-                            {{ user.name.charAt(0).toUpperCase() }}
+                        <!-- Avatar with upload overlay -->
+                        <div class="relative z-10 group cursor-pointer" @click="triggerFileInput" title="Klik untuk ganti foto profil">
+                            <!-- Photo or initials -->
+                            <div class="w-[72px] h-[72px] rounded-2xl border-4 border-white dark:border-ink-900 shadow-lg overflow-hidden">
+                                <img v-if="previewUrl || user.avatar_url"
+                                    :src="previewUrl || user.avatar_url"
+                                    alt="Foto profil"
+                                    class="w-full h-full object-cover" />
+                                <div v-else
+                                    class="w-full h-full bg-gradient-to-br from-sage-300 to-sage-400 dark:from-sage-300/80 dark:to-sage-400/60 text-ink-900 text-2xl font-black flex items-center justify-center select-none">
+                                    {{ user.name.charAt(0).toUpperCase() }}
+                                </div>
+                            </div>
+                            <!-- Camera overlay on hover -->
+                            <div class="absolute inset-0 rounded-2xl bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                                </svg>
+                            </div>
+                            <!-- Hidden file input -->
+                            <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileChange" />
                         </div>
+
                         <span class="text-[11px] px-2.5 py-1 rounded-full font-semibold" :class="roleClass(user.role)">{{ roleLabel(user.role) }}</span>
+                    </div>
+
+                    <!-- Photo upload confirmation bar -->
+                    <div v-if="previewUrl" class="mb-3 flex items-center gap-3 px-3.5 py-2.5 bg-sage-50 dark:bg-sage-300/10 border border-sage-200 dark:border-sage-300/20 rounded-xl">
+                        <svg class="w-4 h-4 text-sage-600 dark:text-sage-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                        </svg>
+                        <span class="text-xs text-sage-700 dark:text-sage-300 flex-1">Foto dipilih — klik simpan untuk mengupload</span>
+                        <button @click="submitPhoto" :disabled="photoProcessing"
+                            class="text-xs font-semibold px-3 py-1 rounded-lg bg-sage-600 hover:bg-sage-700 text-white transition disabled:opacity-50">
+                            {{ photoProcessing ? 'Menyimpan...' : 'Simpan Foto' }}
+                        </button>
+                        <button @click="cancelPhoto" class="text-xs text-ink-400 dark:text-white hover:text-ink-700 transition">Batal</button>
                     </div>
 
                     <h1 class="text-xl font-bold text-ink-900 dark:text-white tracking-tight leading-none">{{ user.name }}</h1>
@@ -116,14 +148,55 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { useForm } from '@inertiajs/vue3'
+import { useForm, router } from '@inertiajs/vue3'
 import { formatDate } from '@/composables/useFormatters'
 
 const props = defineProps({ user: Object })
 
 const infoForm = useForm({ name: props.user.name, email: props.user.email })
 const passForm = useForm({ current_password: '', password: '', password_confirmation: '' })
+
+const fileInput = ref(null)
+const previewUrl = ref(null)
+const selectedFile = ref(null)
+const photoProcessing = ref(false)
+
+const triggerFileInput = () => fileInput.value?.click()
+
+const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    selectedFile.value = file
+    previewUrl.value = URL.createObjectURL(file)
+}
+
+const submitPhoto = () => {
+    if (!selectedFile.value) return
+
+    const formData = new FormData()
+    formData.append('photo', selectedFile.value)
+
+    photoProcessing.value = true
+    router.post('/profile/photo', formData, {
+        onFinish: () => { photoProcessing.value = false },
+        onSuccess: () => {
+            previewUrl.value = null
+            selectedFile.value = null
+            if (fileInput.value) fileInput.value.value = ''
+        },
+        onError: (errors) => {
+            console.error('Upload error:', errors)
+        },
+    })
+}
+
+const cancelPhoto = () => {
+    previewUrl.value = null
+    selectedFile.value = null
+    if (fileInput.value) fileInput.value.value = ''
+}
 
 const submitInfo     = () => infoForm.patch('/profile/info')
 const submitPassword = () => passForm.patch('/profile/password', { onSuccess: () => passForm.reset() })

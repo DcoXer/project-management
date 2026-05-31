@@ -25,7 +25,9 @@
       "Bash(git commit *)",
       "Bash(composer show *)",
       "Bash(xargs sed -i 's/dark:text-sage-[0-9]*/dark:text-white/g')",
-      "Bash(xargs sed -i 's/dark:hover:text-sage-[0-9]*/dark:hover:text-white/g; s/dark:group-hover:text-sage-[0-9]*/dark:group-hover:text-white/g')"
+      "Bash(xargs sed -i 's/dark:hover:text-sage-[0-9]*/dark:hover:text-white/g; s/dark:group-hover:text-sage-[0-9]*/dark:group-hover:text-white/g')",
+      "Bash(Get-Content *)",
+      "Bash(npx tailwindcss *)"
     ]
   }
 }

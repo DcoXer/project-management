@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -44,6 +45,9 @@ class HandleInertiaRequests extends Middleware
                     'email' => $request->user()->email,
                     'role' => $request->user()->role,
                     'is_pm' => $request->user()->role === 'project_manager',
+                    'avatar_url' => $request->user()->avatar
+                        ? Storage::disk('public')->url($request->user()->avatar)
+                        : null,
                     'unread_notifications_count' => $request->user()->unreadNotifications()->count(),
                 ] : null,
             ],
